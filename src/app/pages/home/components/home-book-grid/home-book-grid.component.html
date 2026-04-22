@@ -1,0 +1,17 @@
+<section class="grid-block" id="colecciones">
+  <div class="section-head">
+    <h2>Colecciones recomendadas</h2>
+    <a href="#nuevos">Ver novedades</a>
+  </div>
+
+  <div class="book-grid">
+    @for (book of books; track book.title) {
+      <article class="book-card">
+        <div class="thumb" aria-hidden="true"></div>
+        <p class="category">{{ book.category }}</p>
+        <h3>{{ book.title }}</h3>
+        <p class="author">{{ book.author }}</p>
+      </article>
+    }
+  </div>
+</section>

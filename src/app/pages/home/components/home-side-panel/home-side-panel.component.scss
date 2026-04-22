@@ -1,0 +1,68 @@
+.panel {
+  display: grid;
+  gap: 1rem;
+}
+
+section {
+  border-radius: 18px;
+  padding: 1.05rem;
+  background: var(--surface-card);
+  border: 1px solid rgba(56, 74, 97, 0.11);
+  box-shadow: 0 16px 28px rgba(31, 50, 73, 0.08);
+}
+
+h3 {
+  margin: 0;
+  color: var(--text-title);
+}
+
+ul {
+  margin: 0.7rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.46rem;
+}
+
+li {
+  padding: 0.56rem 0.62rem;
+  border-radius: 10px;
+  background: var(--surface-soft);
+  color: var(--text-main);
+  font-size: 0.9rem;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+li:hover {
+  transform: translateX(4px);
+  background: #deeaf4;
+}
+
+.progress-card {
+  margin-top: 0.7rem;
+}
+
+.progress-card p {
+  margin: 0;
+  color: var(--text-main);
+}
+
+.progress-card p + p {
+  margin-top: 0.34rem;
+}
+
+.bar {
+  margin-top: 0.65rem;
+  height: 9px;
+  border-radius: 999px;
+  background: #d5e3ef;
+  overflow: hidden;
+}
+
+.bar span {
+  display: block;
+  width: 38%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #71add1, #3f87b8);
+}

@@ -1,0 +1,63 @@
+<section class="card" aria-label="Formulario de registro">
+  <p class="step">Comienza en segundos</p>
+  <h2>Crea tu cuenta</h2>
+  <p class="helper">Accede al catalogo y personaliza tu biblioteca digital.</p>
+
+  <form [formGroup]="registerForm" (ngSubmit)="submitRegister()" novalidate>
+    <label for="nombre">Nombre completo</label>
+    <input
+      id="nombre"
+      type="text"
+      formControlName="nombre"
+      placeholder="Ej. Juan Perez"
+      autocomplete="name"
+    />
+    @if (hasError('nombre', 'required')) {
+      <small class="field-error">El nombre es obligatorio.</small>
+    }
+
+    <label for="correo">Correo electronico</label>
+    <input
+      id="correo"
+      type="email"
+      formControlName="correo"
+      placeholder="tu@correo.com"
+      autocomplete="email"
+    />
+    @if (hasError('correo', 'required')) {
+      <small class="field-error">El correo es obligatorio.</small>
+    }
+    @if (hasError('correo', 'email')) {
+      <small class="field-error">Ingresa un correo valido.</small>
+    }
+
+    <label for="contrasena">Contrasena</label>
+    <input
+      id="contrasena"
+      type="password"
+      formControlName="contrasena"
+      placeholder="Minimo 8 caracteres"
+      autocomplete="new-password"
+    />
+    @if (hasError('contrasena', 'required')) {
+      <small class="field-error">La contrasena es obligatoria.</small>
+    }
+    @if (hasError('contrasena', 'minlength')) {
+      <small class="field-error">La contrasena debe tener al menos 8 caracteres.</small>
+    }
+
+    <button type="submit" [disabled]="isSubmitting">
+      {{ isSubmitting ? 'Registrando...' : 'Crear cuenta' }}
+    </button>
+  </form>
+
+  <p class="legal">
+    Al registrarte aceptas nuestros terminos y politicas de privacidad.
+  </p>
+
+  @if (responseMessage) {
+    <div class="response" [class.success]="responseType === 'success'" [class.error]="responseType === 'error'">
+      {{ responseMessage }}
+    </div>
+  }
+</section>

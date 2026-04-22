@@ -1,0 +1,18 @@
+<main class="register-layout">
+  <section class="left-column">
+    <app-register-hero></app-register-hero>
+
+    <section class="mini-cards" aria-label="Beneficios de Bookify">
+      <article>
+        <h3>Lectura personalizada</h3>
+        <p>Recibe sugerencias segun tus gustos y progreso.</p>
+      </article>
+      <article>
+        <h3>Sincronizacion rapida</h3>
+        <p>Guarda favoritos y continua donde te quedaste.</p>
+      </article>
+    </section>
+  </section>
+
+  <app-register-form (registerSuccess)="goToHome()"></app-register-form>
+</main>
