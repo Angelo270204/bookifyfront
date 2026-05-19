@@ -81,34 +81,10 @@
   color: #1a446f;
 }
 
-.logout {
-  margin-top: auto;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.65rem 0.72rem;
-  border-radius: 12px;
-  text-decoration: none;
-  color: #1e4d7c;
-  font-weight: 800;
-  background: rgba(175, 209, 233, 0.36);
-  border: 1px solid rgba(123, 168, 199, 0.32);
-  transition: filter 0.2s ease, transform 0.2s ease;
-}
-
-.logout:hover {
-  filter: brightness(1.03);
-  transform: translateY(-1px);
-}
-
 @media (max-width: 1080px) {
   .sidebar {
     position: static;
     height: auto;
     border-radius: 18px;
-  }
-
-  .logout {
-    margin-top: 0.85rem;
   }
 }

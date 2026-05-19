@@ -15,6 +15,18 @@ export interface RegisterResponse {
   correo: string | null;
 }
 
+export interface LoginRequest {
+  correo: string;
+  contrasena: string;
+}
+
+export interface LoginResponse {
+  exito: boolean;
+  mensaje: string;
+  usuarioId: number | null;
+  correo: string | null;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly http = inject(HttpClient);
@@ -22,5 +34,9 @@ export class AuthService {
 
   register(payload: RegisterRequest): Observable<RegisterResponse> {
     return this.http.post<RegisterResponse>(`${this.apiUrl}/auth/register`, payload);
+  }
+
+  login(payload: LoginRequest): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.apiUrl}/auth/login`, payload);
   }
 }

@@ -1,21 +1,9 @@
-<section class="card" aria-label="Formulario de registro">
-  <p class="step">Comienza en segundos</p>
-  <h2>Crea tu cuenta</h2>
-  <p class="helper">Accede al catalogo y personaliza tu biblioteca digital.</p>
+<section class="card" aria-label="Formulario de inicio de sesion">
+  <p class="step">Bienvenido de vuelta</p>
+  <h2>Inicia sesion</h2>
+  <p class="helper">Accede a tus listas y continua con tus lecturas favoritas.</p>
 
-  <form [formGroup]="registerForm" (ngSubmit)="submitRegister()" novalidate>
-    <label for="nombre">Nombre completo</label>
-    <input
-      id="nombre"
-      type="text"
-      formControlName="nombre"
-      placeholder="Ej. Juan Perez"
-      autocomplete="name"
-    />
-    @if (hasError('nombre', 'required')) {
-      <small class="field-error">El nombre es obligatorio.</small>
-    }
-
+  <form [formGroup]="loginForm" (ngSubmit)="submitLogin()" novalidate>
     <label for="correo">Correo electronico</label>
     <input
       id="correo"
@@ -36,8 +24,8 @@
       id="contrasena"
       type="password"
       formControlName="contrasena"
-      placeholder="Minimo 8 caracteres"
-      autocomplete="new-password"
+      placeholder="Tu contrasena segura"
+      autocomplete="current-password"
     />
     @if (hasError('contrasena', 'required')) {
       <small class="field-error">La contrasena es obligatoria.</small>
@@ -47,13 +35,9 @@
     }
 
     <button type="submit" [disabled]="isSubmitting">
-      {{ isSubmitting ? 'Registrando...' : 'Crear cuenta' }}
+      {{ isSubmitting ? 'Ingresando...' : 'Ingresar' }}
     </button>
   </form>
-
-  <p class="legal">
-    Al registrarte aceptas nuestros terminos y politicas de privacidad.
-  </p>
 
   @if (responseMessage) {
     <div class="response" [class.success]="responseType === 'success'" [class.error]="responseType === 'error'">
@@ -62,7 +46,7 @@
   }
 
   <p class="switch-auth">
-    ¿Ya tienes cuenta?
-    <a routerLink="/login">Inicia sesion</a>
+    ¿No tienes cuenta?
+    <a routerLink="/register">Crea tu cuenta</a>
   </p>
 </section>

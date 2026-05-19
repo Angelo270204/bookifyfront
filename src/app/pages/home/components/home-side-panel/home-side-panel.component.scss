@@ -31,6 +31,18 @@ li {
   color: var(--text-main);
   font-size: 0.9rem;
   transition: transform 0.2s ease, background-color 0.2s ease;
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+li img {
+  width: 40px;
+  height: 52px;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 8px 16px rgba(22, 44, 68, 0.18);
 }
 
 li:hover {

@@ -7,7 +7,7 @@
   <div class="book-grid">
     @for (book of books; track book.title) {
       <article class="book-card">
-        <div class="thumb" aria-hidden="true"></div>
+        <div class="thumb" [style.backgroundImage]="'url(' + book.coverUrl + ')'" aria-hidden="true"></div>
         <p class="category">{{ book.category }}</p>
         <h3>{{ book.title }}</h3>
         <p class="author">{{ book.author }}</p>

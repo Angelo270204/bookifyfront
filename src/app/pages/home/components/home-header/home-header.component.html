@@ -13,5 +13,21 @@
     <a href="#nuevos">Nuevos</a>
   </nav>
 
-  <a class="back" routerLink="/register">Cerrar sesion</a>
+  <div class="profile" [class.open]="isMenuOpen">
+    <button type="button" class="profile-trigger" (click)="toggleMenu()">
+      <div class="avatar" aria-hidden="true">{{ userEmail.charAt(0).toUpperCase() }}</div>
+      <div class="profile-info">
+        <p class="profile-title">Perfil</p>
+        <p class="profile-email">{{ userEmail }}</p>
+      </div>
+      <span class="chevron" aria-hidden="true">▾</span>
+    </button>
+
+    <div class="menu-dropdown" role="menu" aria-label="Opciones de perfil">
+      <a role="menuitem" href="#perfil" (click)="closeMenu()">Ver perfil</a>
+      <a role="menuitem" href="#favoritos" (click)="closeMenu()">Favoritos</a>
+      <a role="menuitem" href="#config" (click)="closeMenu()">Configuracion</a>
+      <a role="menuitem" routerLink="/login" (click)="closeMenu()">Cerrar sesion</a>
+    </div>
+  </div>
 </header>
