@@ -8,5 +8,12 @@ export const routes: Routes = [
   { path: 'login', component: LoginPageComponent },
   { path: 'register', component: RegisterPageComponent },
   { path: 'home', component: HomePageComponent },
+ // NUEVA RUTA INTEGRADA PARA LIBROS
+  { 
+    path: 'libros', 
+    loadComponent: () => import('./pages/libro-page/libro-page').then(m => m.LibroPage)
+  },
+  
+  // 
   { path: '**', redirectTo: 'login' }
 ];

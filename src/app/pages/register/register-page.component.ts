@@ -12,7 +12,8 @@ import { RegisterHeroComponent } from './components/register-hero/register-hero.
 export class RegisterPageComponent {
   private readonly router = inject(Router);
 
-  goToHome(): void {
-    this.router.navigate(['/home']);
+  // CAMBIO EL NOMBRE Y EL DESTINO A /login 
+  goToLogin(): void {
+    this.router.navigate(['/login']);
   }
 }
