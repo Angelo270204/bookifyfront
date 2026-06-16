@@ -70,6 +70,89 @@
   }
 }
 
+// --- Columna de portada ---
+.col-portada {
+  width: 60px;
+  padding: 8px 8px 8px 16px !important;
+}
+
+.portada-thumb-wrap {
+  position: relative;
+  width: 40px;
+  height: 56px;
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(28, 45, 69, 0.15);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 14px rgba(28, 45, 69, 0.25);
+
+    .thumb-overlay { opacity: 1; }
+  }
+
+  &.subiendo {
+    cursor: wait;
+  }
+}
+
+.portada-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.portada-thumb-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: rgba(255,255,255,0.7);
+}
+
+// Icono de cámara superpuesto al hacer hover
+.thumb-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(22, 44, 68, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  font-size: 1rem;
+}
+
+// Spinner de carga en la miniatura
+.thumb-spinner {
+  position: absolute;
+  inset: 0;
+  background: rgba(22, 44, 68, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: girar 0.65s linear infinite;
+}
+
+@keyframes girar {
+  to { transform: rotate(360deg); }
+}
+
 .id-col {
   color: var(--text-muted);
   font-size: 0.78rem;

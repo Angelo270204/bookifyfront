@@ -4,10 +4,20 @@
     <span class="badge-count">Total: {{ totalElements }} libros</span>
   </div>
 
+  <!-- Input de archivo oculto para actualizar portada -->
+  <input
+    #inputPortadaTabla
+    type="file"
+    accept="image/jpeg,image/png,image/webp"
+    style="display:none"
+    (change)="onCambiarPortada($event)"
+  >
+
   <div class="table-wrapper">
     <table class="data-table">
       <thead>
         <tr>
+          <th class="col-portada">Portada</th>
           <th>#</th>
           <th>Título</th>
           <th>Formato</th>
@@ -18,6 +28,42 @@
       </thead>
       <tbody>
         <tr *ngFor="let libro of libros">
+
+          <!-- Miniatura de portada con botón de cambio en hover -->
+          <td class="col-portada">
+            <div
+              class="portada-thumb-wrap"
+              [class.subiendo]="libroSubiendo === libro.id"
+              (click)="abrirCambioPortada(libro.id)"
+              [title]="'Clic para cambiar portada de: ' + libro.titulo"
+            >
+              <!-- Con imagen real -->
+              <img
+                *ngIf="libro.portadaUrl"
+                [src]="libro.portadaUrl"
+                [alt]="'Portada ' + libro.titulo"
+                class="portada-thumb-img"
+                loading="lazy"
+              />
+              <!-- Placeholder de color con inicial -->
+              <div
+                *ngIf="!libro.portadaUrl"
+                class="portada-thumb-placeholder"
+                [style.background]="obtenerColorPortada(libro.id)"
+              >
+                {{ libro.titulo?.charAt(0)?.toUpperCase() }}
+              </div>
+              <!-- Overlay al hacer hover -->
+              <div class="thumb-overlay" *ngIf="libroSubiendo !== libro.id">
+                <span>📷</span>
+              </div>
+              <!-- Spinner mientras sube -->
+              <div class="thumb-spinner" *ngIf="libroSubiendo === libro.id">
+                <div class="spinner"></div>
+              </div>
+            </div>
+          </td>
+
           <td class="id-col">{{ libro.id }}</td>
           <td class="titulo-col">{{ libro.titulo }}</td>
           <td><span class="badge badge-formato">{{ libro.formato }}</span></td>
@@ -26,7 +72,7 @@
           <td><span class="badge badge-categoria">{{ libro.categoriaNombre }}</span></td>
         </tr>
         <tr *ngIf="libros.length === 0">
-          <td colspan="6" class="empty-state">
+          <td colspan="7" class="empty-state">
             <span>📭</span>
             <p>No hay libros registrados o el backend no está disponible.</p>
           </td>

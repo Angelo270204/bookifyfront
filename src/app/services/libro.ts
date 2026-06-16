@@ -52,4 +52,21 @@ export class LibroService {
   createCategoria(categoria: { nombre: string }): Observable<any> {
     return this.http.post<any>(this.categoriasUrl, categoria);
   }
+
+  // Sube una imagen a Cloudinary a través del backend y retorna su URL pública
+  uploadImagen(archivo: File): Observable<{ url: string }> {
+    const formData = new FormData();
+    formData.append('archivo', archivo);
+    return this.http.post<{ url: string }>('http://localhost:8080/upload/imagen', formData);
+  }
+
+  // Actualiza solo la portada de un libro existente (llama al endpoint PATCH)
+  updatePortada(id: number, portadaUrl: string): Observable<any> {
+    return this.http.patch<any>(`${this.apiUrl}/${id}/portada`, { portadaUrl });
+  }
+
+  // Elimina una imagen huérfana o cancelada de Cloudinary
+  deleteImagen(url: string): Observable<any> {
+    return this.http.delete<any>('http://localhost:8080/upload/imagen', { body: { url } });
+  }
 }

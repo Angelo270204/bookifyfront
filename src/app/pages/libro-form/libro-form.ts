@@ -1,4 +1,4 @@
-import { Component, inject, Output, EventEmitter, OnInit } from '@angular/core'; // <-- Agregamos OnInit
+import { Component, inject, Output, EventEmitter, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LibroService } from '../../services/libro';
@@ -10,13 +10,20 @@ import { LibroService } from '../../services/libro';
   templateUrl: './libro-form.html',
   styleUrl: './libro-form.scss',
 })
-export class LibroForm implements OnInit { // <-- Agregamos "implements OnInit"
+export class LibroForm implements OnInit {
   private libroService = inject(LibroService);
+  private cdr = inject(ChangeDetectorRef); // Necesario para forzar redibujado tras la subida async
   @Output() libroGuardado = new EventEmitter<void>();
+  @ViewChild('inputPortada') inputPortada!: ElementRef<HTMLInputElement>;
 
   // Arreglos vacíos para almacenar lo que devuelva el backend
   autores: any[] = [];
   categorias: any[] = [];
+
+  // Estado de la portada
+  subiendoPortada = false;
+  previewPortadaUrl: string | null = null;
+  errorPortada: string | null = null;
 
   nuevoLibro: any = {
     titulo: '',
@@ -28,39 +35,124 @@ export class LibroForm implements OnInit { // <-- Agregamos "implements OnInit"
     categoriaId: null
   };
 
-  // Esto se ejecuta automáticamente cuando el formulario aparece en pantalla
+  // Se ejecuta cuando el formulario aparece en pantalla
   ngOnInit(): void {
-    // Llamamos al backend para llenar el arreglo de autores
+    // Cargamos autores y categorías del backend
     this.libroService.getAutores().subscribe({
       next: (data) => this.autores = data,
       error: (err) => console.error('Error al traer autores:', err)
     });
 
-    // Llamamos al backend para llenar el arreglo de categorías
     this.libroService.getCategorias().subscribe({
       next: (data) => this.categorias = data,
       error: (err) => console.error('Error al traer categorías:', err)
     });
   }
 
-guardar() {
+  // Abre el selector de archivos al hacer clic en la zona de portada
+  abrirSelectorPortada(): void {
+    this.inputPortada.nativeElement.click();
+  }
+
+  // Maneja la selección de imagen, la sube a Cloudinary y guarda la URL
+  onPortadaSeleccionada(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+
+    const archivo = input.files[0];
+
+    // Validación de tamaño: máximo 2MB
+    if (archivo.size > 2 * 1024 * 1024) {
+      this.errorPortada = 'La imagen no puede pesar más de 2MB.';
+      return;
+    }
+
+    // Si ya había una imagen subida, la eliminamos primero para no dejar basura
+    if (this.nuevoLibro.portadaUrl) {
+      this.libroService.deleteImagen(this.nuevoLibro.portadaUrl).subscribe({
+        error: (e) => console.warn('No se pudo borrar imagen previa en Cloudinary:', e)
+      });
+    }
+
+    this.errorPortada = null;
+    this.subiendoPortada = true;
+
+    // Creamos un preview local inmediato para buena experiencia de usuario
+    const lector = new FileReader();
+    lector.onload = (e) => {
+      this.previewPortadaUrl = e.target?.result as string;
+    };
+    lector.readAsDataURL(archivo);
+
+    // Subimos a Cloudinary a través del backend
+    this.libroService.uploadImagen(archivo).subscribe({
+      next: (respuesta) => {
+        this.nuevoLibro.portadaUrl = respuesta.url;
+        this.subiendoPortada = false;
+        // Forzamos el redibujado porque multipart/form-data puede escapar la zona de Angular
+        this.cdr.detectChanges();
+        console.log('Portada subida a Cloudinary:', respuesta.url);
+      },
+      error: (err) => {
+        console.error('Error al subir portada:', err);
+        this.subiendoPortada = false;
+        this.errorPortada = 'Error al subir la imagen. Inténtalo de nuevo.';
+        this.previewPortadaUrl = null;
+        // Forzamos el redibujado para mostrar el mensaje de error
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  guardar() {
     this.libroService.createLibro(this.nuevoLibro).subscribe({
       next: (response) => {
-        // 1. Primero tocamos el timbre para que la tabla vuele a traer los datos
-        this.libroGuardado.emit(); 
-        
-        // 2. Limpiamos las cajas de texto de inmediato
+        // Notificamos a la tabla para que recargue
+        this.libroGuardado.emit();
+
+        // Limpiamos todo el formulario
         this.nuevoLibro = {
           titulo: '', descripcion: '', precio: 0, formato: '',
           portadaUrl: '', autorId: null, categoriaId: null
         };
+        this.previewPortadaUrl = null;
+        this.errorPortada = null;
+        if (this.inputPortada) this.inputPortada.nativeElement.value = '';
 
-        // 3. Al final lanzamos el aviso en consola (sin bloquear)
         console.log('Libro guardado con éxito:', response);
       },
       error: (err) => {
-        console.error('Error al guardar:', err);
+        console.error('Error al guardar libro:', err);
+        // Si el libro falla en guardarse y ya habíamos subido una portada, la borramos
+        if (this.nuevoLibro.portadaUrl) {
+          this.libroService.deleteImagen(this.nuevoLibro.portadaUrl).subscribe({
+            next: () => console.log('Imagen huérfana eliminada por fallo al guardar el libro'),
+            error: (e) => console.warn('No se pudo borrar imagen huérfana en Cloudinary:', e)
+          });
+        }
       }
     });
+  }
+
+  // Se ejecuta al dar clic en el botón Cancelar
+  cancelar() {
+    // Si hay una imagen subida, mandamos a eliminarla a Cloudinary
+    if (this.nuevoLibro.portadaUrl) {
+      this.libroService.deleteImagen(this.nuevoLibro.portadaUrl).subscribe({
+        next: () => console.log('Imagen cancelada eliminada de Cloudinary'),
+        error: (e) => console.warn('Error al intentar borrar imagen cancelada:', e)
+      });
+    }
+
+    // Limpiamos el formulario
+    this.nuevoLibro = {
+      titulo: '', descripcion: '', precio: 0, formato: '',
+      portadaUrl: '', autorId: null, categoriaId: null
+    };
+    this.previewPortadaUrl = null;
+    this.errorPortada = null;
+    if (this.inputPortada) this.inputPortada.nativeElement.value = '';
+    
+    this.cdr.detectChanges();
   }
 }

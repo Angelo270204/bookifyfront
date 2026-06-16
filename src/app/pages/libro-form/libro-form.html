@@ -10,7 +10,11 @@
 
       <div class="field">
         <label for="formato">Formato</label>
-        <input id="formato" type="text" name="formato" [(ngModel)]="nuevoLibro.formato" placeholder="Ej: Digital, Físico">
+        <select id="formato" name="formato" [(ngModel)]="nuevoLibro.formato">
+          <option value="" disabled>Selecciona un formato</option>
+          <option value="FISICO">Físico</option>
+          <option value="DIGITAL">Digital</option>
+        </select>
       </div>
 
       <div class="field">
@@ -18,9 +22,42 @@
         <input id="precio" type="number" name="precio" [(ngModel)]="nuevoLibro.precio" placeholder="0.00" required min="0">
       </div>
 
+      <!-- Zona de carga de portada (reemplaza el input de texto) -->
       <div class="field">
-        <label for="portadaUrl">URL de Portada <span class="optional">(Opcional)</span></label>
-        <input id="portadaUrl" type="text" name="portadaUrl" [(ngModel)]="nuevoLibro.portadaUrl" placeholder="https://...">
+        <label>Portada <span class="optional">(Opcional · Máx. 2MB)</span></label>
+        <input
+          #inputPortada
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          style="display:none"
+          (change)="onPortadaSeleccionada($event)"
+        >
+
+        <div class="portada-uploader" (click)="abrirSelectorPortada()">
+
+          <!-- Estado: Con previsualización -->
+          <div class="portada-preview-wrap" *ngIf="previewPortadaUrl && !subiendoPortada">
+            <img [src]="previewPortadaUrl" alt="Previsualización de portada" class="portada-preview-img">
+            <div class="portada-overlay">
+              <span>🔄 Cambiar</span>
+            </div>
+          </div>
+
+          <!-- Estado: Subiendo -->
+          <div class="portada-cargando" *ngIf="subiendoPortada">
+            <div class="spinner"></div>
+            <p>Subiendo imagen...</p>
+          </div>
+
+          <!-- Estado: Vacío -->
+          <div class="portada-vacia" *ngIf="!previewPortadaUrl && !subiendoPortada">
+            <span class="portada-icono">🖼️</span>
+            <p>Clic para subir portada</p>
+          </div>
+
+        </div>
+
+        <p class="error-portada" *ngIf="errorPortada">{{ errorPortada }}</p>
       </div>
 
       <div class="field full-width">
@@ -46,7 +83,15 @@
     </div>
 
     <div class="form-actions">
-      <button type="submit" class="btn-save">💾 Guardar Libro</button>
+      <!-- Botón de cancelar -->
+      <button type="button" class="btn-cancel" (click)="cancelar()" [disabled]="subiendoPortada">
+        ❌ Cancelar
+      </button>
+
+      <button type="submit" class="btn-save" [disabled]="subiendoPortada">
+        <span *ngIf="!subiendoPortada">💾 Guardar Libro</span>
+        <span *ngIf="subiendoPortada">⏳ Subiendo portada...</span>
+      </button>
     </div>
   </form>
 </div>

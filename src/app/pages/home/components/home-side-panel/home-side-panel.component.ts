@@ -26,7 +26,7 @@ export class HomeSidePanelComponent implements OnInit {
   cargando = true;
 
   ngOnInit(): void {
-    this.libroService.getNuevosLanzamientos(5).subscribe({
+    this.libroService.getNuevosLanzamientos(3).subscribe({
       next: (response) => {
         if (response && response.content) {
           this.nuevosLanzamientos = response.content;
