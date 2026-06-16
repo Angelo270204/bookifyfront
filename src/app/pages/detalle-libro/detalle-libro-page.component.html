@@ -1,0 +1,113 @@
+<main class="detalle-layout">
+  <app-home-header></app-home-header>
+
+  <div class="detalle-container">
+    <div *ngIf="cargando" class="loading-state">
+      <div class="spinner"></div>
+      <p>Cargando información del libro...</p>
+    </div>
+
+    <div *ngIf="error" class="error-state">
+      <div class="error-icon">⚠️</div>
+      <h2>Oops! Algo salió mal</h2>
+      <p>{{ error }}</p>
+      <a routerLink="/" class="btn-volver">Volver al inicio</a>
+    </div>
+
+    <div class="libro-content" *ngIf="!cargando && libro">
+      <!-- Sección Izquierda: Portada -->
+      <div class="col-portada">
+        <div class="portada-wrapper">
+          <img *ngIf="libro.portadaUrl" [src]="libro.portadaUrl" [alt]="libro.titulo" class="portada-img">
+          <div *ngIf="!libro.portadaUrl" class="portada-placeholder">
+            <span>{{ libro.titulo.charAt(0).toUpperCase() }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección Derecha: Info y Compra -->
+      <div class="col-info">
+        <div class="breadcrumb">
+          <a routerLink="/">Inicio</a> &rsaquo;
+          <a routerLink="/explorar">Catálogo</a> &rsaquo;
+          <span>{{ libro.categoria.nombre || 'General' }}</span>
+        </div>
+
+        <h1 class="titulo">{{ libro.titulo }}</h1>
+        <p class="autor">Por <span class="autor-nombre">{{ libro.autor.nombre || 'Desconocido' }}</span></p>
+
+        <div class="badges">
+          <span class="badge-formato">{{ libro.formato }}</span>
+          <span class="badge-estado" [class.inactivo]="libro.activo === false">
+            {{ libro.activo !== false ? 'Disponible' : 'Agotado' }}
+          </span>
+        </div>
+
+        <div class="precio-section">
+          <span class="precio">${{ libro.precio | number:'1.2-2' }}</span>
+        </div>
+
+        <div class="acciones">
+          <button class="btn-comprar" [disabled]="libro.activo === false">Comprar ahora</button>
+          <button class="btn-carrito" [disabled]="libro.activo === false">Agregar al carrito</button>
+        </div>
+
+        <div class="descripcion-section">
+          <h3>Descripción</h3>
+          <p class="descripcion-texto">{{ libro.descripcion || 'No hay descripción disponible para este libro.' }}</p>
+        </div>
+        
+        <div class="detalles-adicionales">
+          <h3>Detalles del producto</h3>
+          <ul>
+            <li><strong>Categoría:</strong> {{ libro.categoria.nombre || 'Sin categoría' }}</li>
+            <li><strong>Formato:</strong> {{ libro.formato }}</li>
+            <li *ngIf="libro.fechaRegistro"><strong>Fecha de publicación:</strong> {{ libro.fechaRegistro | date:'mediumDate' }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Novedades / Similares -->
+    <section class="similares-section" *ngIf="!cargando && libro">
+      <div class="similares-header">
+        <h2>Libros recomendados</h2>
+        <p>También podría interesarte</p>
+      </div>
+
+      <!-- Skeleton loader -->
+      <div class="similares-grid" *ngIf="cargandoSimilares">
+        <div class="skeleton-card" *ngFor="let i of [1, 2, 3, 4, 5, 6]">
+          <div class="skeleton-portada"></div>
+          <div class="skeleton-text-block">
+            <div class="skeleton-line category"></div>
+            <div class="skeleton-line title"></div>
+            <div class="skeleton-line author"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Real grid -->
+      <div class="similares-grid" *ngIf="!cargandoSimilares && librosSimilares.length > 0">
+        <a class="similar-card" *ngFor="let similar of librosSimilares; let i = index" [routerLink]="['/libro', similar.id]">
+          <div class="portada-mini-wrapper" [style.background]="similar.portadaUrl ? 'none' : colorPortada(i)">
+            <img *ngIf="similar.portadaUrl" [src]="similar.portadaUrl" [alt]="similar.titulo" class="portada-img">
+            <span *ngIf="!similar.portadaUrl" class="portada-inicial">{{ similar.titulo.charAt(0).toUpperCase() }}</span>
+          </div>
+          <div class="similar-info">
+            <p class="similar-cat">{{ similar.categoria }}</p>
+            <h4 class="similar-titulo" [title]="similar.titulo">{{ similar.titulo }}</h4>
+            <p class="similar-autor">{{ similar.autor }}</p>
+            <p class="similar-precio">${{ similar.precio | number:'1.2-2' }}</p>
+          </div>
+        </a>
+      </div>
+
+      <!-- Empty state -->
+      <div class="similares-vacio" *ngIf="!cargandoSimilares && librosSimilares.length === 0">
+        <p>No hay libros recomendados en este momento.</p>
+      </div>
+    </section>
+
+  </div>
+</main>

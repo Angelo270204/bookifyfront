@@ -14,6 +14,11 @@ export const routes: Routes = [
     title: 'Explorar Catálogo — Bookify',
     loadComponent: () => import('./pages/explorar/explorar-page.component').then(m => m.ExplorarPageComponent)
   },
+  {
+    path: 'libro/:id',
+    title: 'Detalles del Libro — Bookify',
+    loadComponent: () => import('./pages/detalle-libro/detalle-libro-page.component').then(m => m.DetalleLibroPageComponent)
+  },
 
   // Panel de administración con layout anidado
   {

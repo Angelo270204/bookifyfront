@@ -16,6 +16,7 @@ export interface Libro {
   formato: string;
   portadaUrl?: string;
   activo?: boolean;
+  fechaRegistro?: string;
   autor: Autor;
   categoria: Categoria;
 }

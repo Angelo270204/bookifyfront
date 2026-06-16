@@ -1,11 +1,12 @@
 import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { LibroService } from '../../../../services/libro';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-home-book-grid',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './home-book-grid.component.html',
   styleUrl: './home-book-grid.component.scss'
 })

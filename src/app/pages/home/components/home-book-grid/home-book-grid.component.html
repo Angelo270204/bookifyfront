@@ -7,10 +7,12 @@
   <div class="book-grid">
     @for (book of books; track book.id) {
       <article class="book-card">
-        <div class="thumb" [style.backgroundImage]="'url(' + getCoverUrl(book) + ')'" aria-hidden="true"></div>
-        <p class="category">{{ book.categoria?.nombre || 'Sin categoría' }}</p>
-        <h3>{{ book.titulo }}</h3>
-        <p class="author">{{ book.autor?.nombre || 'Desconocido' }}</p>
+        <a [routerLink]="['/libro', book.id]" style="text-decoration: none; color: inherit; display: block;">
+          <div class="thumb" [style.backgroundImage]="'url(' + getCoverUrl(book) + ')'" aria-hidden="true"></div>
+          <p class="category">{{ book.categoria?.nombre || 'Sin categoría' }}</p>
+          <h3>{{ book.titulo }}</h3>
+          <p class="author">{{ book.autor?.nombre || 'Desconocido' }}</p>
+        </a>
       </article>
     }
   </div>

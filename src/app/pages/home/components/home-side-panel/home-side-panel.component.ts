@@ -1,5 +1,6 @@
 import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { LibroService } from '../../../../services/libro';
 
 // Paleta de degradados para las portadas virtuales
@@ -14,7 +15,7 @@ const PALETA_PORTADAS = [
 @Component({
   selector: 'app-home-side-panel',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './home-side-panel.component.html',
   styleUrl: './home-side-panel.component.scss'
 })

@@ -52,6 +52,10 @@ export class LibroService {
     return this.http.get<Libro>(`${this.apiUrl}/${id}`);
   }
 
+  getLibrosSimilares(id: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${id}/similares`);
+  }
+
   createLibro(libro: Libro): Observable<Libro> {
     return this.http.post<Libro>(this.apiUrl, libro);
   }
