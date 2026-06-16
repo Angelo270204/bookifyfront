@@ -13,8 +13,8 @@ export class LibroService {
   private autoresUrl = 'http://localhost:8080/autores';
   private categoriasUrl = 'http://localhost:8080/categorias';
 
-  getLibros(): Observable<Libro[]> {
-    return this.http.get<Libro[]>(this.apiUrl);
+  getLibrosPaginados(page: number = 0, size: number = 10): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/buscar?page=${page}&size=${size}`);
   }
 
   getLibroById(id: number): Observable<Libro> {
@@ -38,5 +38,13 @@ export class LibroService {
 
   getCategorias(): Observable<any[]> {
     return this.http.get<any[]>(this.categoriasUrl);
+  }
+
+  createAutor(autor: { nombre: string }): Observable<any> {
+    return this.http.post<any>(this.autoresUrl, autor);
+  }
+
+  createCategoria(categoria: { nombre: string }): Observable<any> {
+    return this.http.post<any>(this.categoriasUrl, categoria);
   }
 }

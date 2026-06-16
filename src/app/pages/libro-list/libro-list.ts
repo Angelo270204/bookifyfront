@@ -1,8 +1,6 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-// Ojo: Asegúrate de que esta ruta apunte bien al archivo libro.ts (o libro.service.ts) que modificaste antes
 import { LibroService } from '../../services/libro'; 
-import { Libro } from '../../models/libro.interface';
 
 @Component({
   selector: 'app-libro-list',
@@ -11,20 +9,46 @@ import { Libro } from '../../models/libro.interface';
   styleUrl: './libro-list.scss',
 })
 export class LibroList implements OnInit {
-  libros: Libro[] = [];
+  libros: any[] = [];
+  currentPage = 0;
+  totalPages = 0;
+  totalElements = 0;
+
   private libroService = inject(LibroService);
+  private cdr = inject(ChangeDetectorRef); // Inyectamos ChangeDetectorRef
 
   ngOnInit(): void {
     this.cargarLibros();
   }
 
-  cargarLibros() {
-    this.libroService.getLibros().subscribe({
-      next: (data) => {
-        this.libros = data;
-        console.log('Libros cargados:', data);
+  cargarLibros(page: number = 0) {
+    this.libroService.getLibrosPaginados(page, 10).subscribe({
+      next: (response) => {
+        // Validación segura por si la respuesta no viene paginada como esperamos
+        if (response && response.content) {
+          this.libros = response.content;
+          this.currentPage = response.pageable?.pageNumber || 0;
+          this.totalPages = response.totalPages || 0;
+          this.totalElements = response.totalElements || 0;
+        } else if (Array.isArray(response)) {
+          // Fallback por si devuelve un arreglo directo
+          this.libros = response;
+        } else {
+          this.libros = [];
+        }
+        
+        console.log('Libros cargados:', this.libros);
+        
+        // Forzamos el redibujado de la tabla
+        this.cdr.detectChanges();
       },
       error: (err) => console.error('Error al conectar con Spring Boot:', err)
     });
+  }
+
+  cambiarPagina(nuevaPagina: number) {
+    if (nuevaPagina >= 0 && nuevaPagina < this.totalPages) {
+      this.cargarLibros(nuevaPagina);
+    }
   }
 }

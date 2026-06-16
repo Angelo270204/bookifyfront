@@ -1,0 +1,61 @@
+<div class="admin-page">
+  <header class="page-header">
+    <div class="page-title-block">
+      <span class="page-icon">✍️</span>
+      <div>
+        <h1>Gestión de Autores</h1>
+        <p>Administra la lista de autores de tu biblioteca.</p>
+      </div>
+    </div>
+    <button class="btn-primary" (click)="toggleFormulario()">
+      <span>{{ mostrarFormulario ? '✕  Cancelar' : '+ Nuevo Autor' }}</span>
+    </button>
+  </header>
+
+  <div class="form-panel" [class.open]="mostrarFormulario">
+    <div class="form-card">
+      <h3 class="form-title">Añadir Nuevo Autor</h3>
+      <form class="simple-form" (ngSubmit)="guardar()">
+        <div class="field">
+          <label for="nombreAutor">Nombre completo</label>
+          <input id="nombreAutor" type="text" name="nombre" [(ngModel)]="nuevoAutor.nombre" placeholder="Ej: Gabriel García Márquez" required>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn-save">💾 Guardar Autor</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <section class="table-section">
+    <div class="list-container">
+      <div class="list-header">
+        <h2>Listado de Autores</h2>
+        <span class="badge-count">{{ autores.length }} registrados</span>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre del Autor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let autor of autores">
+              <td class="id-col">{{ autor.id }}</td>
+              <td class="titulo-col">{{ autor.nombre }}</td>
+            </tr>
+            <tr *ngIf="autores.length === 0">
+              <td colspan="2" class="empty-state">
+                <span>📭</span>
+                <p>No hay autores registrados.</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</div>

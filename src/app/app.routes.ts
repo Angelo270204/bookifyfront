@@ -21,7 +21,14 @@ export const routes: Routes = [
         path: 'libros',
         loadComponent: () => import('./pages/libro-page/libro-page').then(m => m.LibroPage)
       },
-      // Próximamente: autores, categorías
+      {
+        path: 'autores',
+        loadComponent: () => import('./pages/admin/autores/autores-page.component').then(m => m.AutoresPageComponent)
+      },
+      {
+        path: 'categorias',
+        loadComponent: () => import('./pages/admin/categorias/categorias-page.component').then(m => m.CategoriasPageComponent)
+      }
     ]
   },
 

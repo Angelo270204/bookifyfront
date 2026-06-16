@@ -1,0 +1,61 @@
+<div class="admin-page">
+  <header class="page-header">
+    <div class="page-title-block">
+      <span class="page-icon">🏷️</span>
+      <div>
+        <h1>Gestión de Categorías</h1>
+        <p>Administra los géneros y categorías literarias de tu biblioteca.</p>
+      </div>
+    </div>
+    <button class="btn-primary" (click)="toggleFormulario()">
+      <span>{{ mostrarFormulario ? '✕  Cancelar' : '+ Nueva Categoría' }}</span>
+    </button>
+  </header>
+
+  <div class="form-panel" [class.open]="mostrarFormulario">
+    <div class="form-card">
+      <h3 class="form-title">Añadir Nueva Categoría</h3>
+      <form class="simple-form" (ngSubmit)="guardar()">
+        <div class="field">
+          <label for="nombreCategoria">Nombre de la categoría</label>
+          <input id="nombreCategoria" type="text" name="nombre" [(ngModel)]="nuevaCategoria.nombre" placeholder="Ej: Ciencia Ficción" required>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn-save">💾 Guardar Categoría</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <section class="table-section">
+    <div class="list-container">
+      <div class="list-header">
+        <h2>Listado de Categorías</h2>
+        <span class="badge-count">{{ categorias.length }} registradas</span>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre de la Categoría</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let categoria of categorias">
+              <td class="id-col">{{ categoria.id }}</td>
+              <td class="titulo-col"><span class="badge badge-categoria">{{ categoria.nombre }}</span></td>
+            </tr>
+            <tr *ngIf="categorias.length === 0">
+              <td colspan="2" class="empty-state">
+                <span>📭</span>
+                <p>No hay categorías registradas.</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</div>

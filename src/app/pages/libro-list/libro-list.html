@@ -1,7 +1,7 @@
 <div class="list-container">
   <div class="list-header">
     <h2>Inventario de Libros</h2>
-    <span class="badge-count">{{ libros.length }} registros</span>
+    <span class="badge-count">Total: {{ totalElements }} libros</span>
   </div>
 
   <div class="table-wrapper">
@@ -22,8 +22,8 @@
           <td class="titulo-col">{{ libro.titulo }}</td>
           <td><span class="badge badge-formato">{{ libro.formato }}</span></td>
           <td class="precio-col">${{ libro.precio | number:'1.2-2' }}</td>
-          <td>{{ libro.autor?.nombre }}</td>
-          <td><span class="badge badge-categoria">{{ libro.categoria?.nombre }}</span></td>
+          <td>{{ libro.autorNombre }}</td>
+          <td><span class="badge badge-categoria">{{ libro.categoriaNombre }}</span></td>
         </tr>
         <tr *ngIf="libros.length === 0">
           <td colspan="6" class="empty-state">
@@ -33,5 +33,15 @@
         </tr>
       </tbody>
     </table>
+  </div>
+
+  <div class="pagination-controls" *ngIf="totalPages > 1">
+    <button class="btn-page" [disabled]="currentPage === 0" (click)="cambiarPagina(currentPage - 1)">
+      ← Anterior
+    </button>
+    <span class="page-info">Página {{ currentPage + 1 }} de {{ totalPages }}</span>
+    <button class="btn-page" [disabled]="currentPage === totalPages - 1" (click)="cambiarPagina(currentPage + 1)">
+      Siguiente →
+    </button>
   </div>
 </div>

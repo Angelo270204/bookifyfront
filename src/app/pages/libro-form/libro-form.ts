@@ -55,13 +55,11 @@ guardar() {
           portadaUrl: '', autorId: null, categoriaId: null
         };
 
-        // 3. Al final lanzamos el aviso flotante sin bloquear el flujo
+        // 3. Al final lanzamos el aviso en consola (sin bloquear)
         console.log('Libro guardado con éxito:', response);
-        alert('¡Libro guardado con éxito en MySQL!');
       },
       error: (err) => {
         console.error('Error al guardar:', err);
-        alert('Hubo un error al guardar. Revisa la terminal de Java.');
       }
     });
   }
