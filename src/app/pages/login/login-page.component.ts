@@ -12,7 +12,11 @@ import { LoginHeroComponent } from './components/login-hero/login-hero.component
 export class LoginPageComponent {
   private readonly router = inject(Router);
 
-  goToHome(): void {
-    this.router.navigate(['/home']);
+  handleLoginSuccess(roles: string[]): void {
+    if (roles && roles.some(role => role.includes('ADMIN'))) {
+      this.router.navigate(['/admin']);
+    } else {
+      this.router.navigate(['/home']);
+    }
   }
 }

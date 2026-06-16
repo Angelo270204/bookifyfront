@@ -1,9 +1,27 @@
-<div style="max-width: 1200px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif;">
-  <h2 style="text-align: center; color: #333; margin-bottom: 20px;">Módulo de Gestión de Libros </h2>
-  
-  <app-libro-form (libroGuardado)="actualizarTabla()"></app-libro-form>
-  
-  <hr style="margin: 30px 0; border: 1px dashed #ccc;">
-  
-  <app-libro-list></app-libro-list>
+<div class="libros-page">
+
+  <!-- Cabecera de la sección -->
+  <header class="page-header">
+    <div class="page-title-block">
+      <span class="page-icon">📚</span>
+      <div>
+        <h1>Gestión de Libros</h1>
+        <p>Añade, consulta y administra el catálogo de libros.</p>
+      </div>
+    </div>
+    <button class="btn-primary" (click)="toggleFormulario()">
+      <span>{{ mostrarFormulario ? '✕  Cancelar' : '+ Nuevo Libro' }}</span>
+    </button>
+  </header>
+
+  <!-- Panel deslizable del formulario -->
+  <div class="form-panel" [class.open]="mostrarFormulario">
+    <app-libro-form (libroGuardado)="onLibroGuardado()"></app-libro-form>
+  </div>
+
+  <!-- Tabla de libros -->
+  <section class="table-section">
+    <app-libro-list></app-libro-list>
+  </section>
+
 </div>

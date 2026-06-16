@@ -16,7 +16,7 @@ export class LoginFormComponent {
   private readonly authService = inject(AuthService);
   private readonly cdr = inject(ChangeDetectorRef);
 
-  @Output() loginSuccess = new EventEmitter<void>();
+  @Output() loginSuccess = new EventEmitter<string[]>();
 
   isSubmitting = false;
   responseMessage = '';
@@ -54,9 +54,12 @@ export class LoginFormComponent {
           if (response.correo) {
             localStorage.setItem('bookifyUserEmail', response.correo);
           }
+          if (response.roles) {
+            localStorage.setItem('bookifyUserRoles', JSON.stringify(response.roles));
+          }
           this.responseMessage = '';
           this.responseType = '';
-          this.loginSuccess.emit();
+          this.loginSuccess.emit(response.roles || []);
         } else {
           this.responseMessage = response.mensaje;
           this.responseType = 'error';

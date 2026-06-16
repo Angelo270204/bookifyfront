@@ -1,29 +1,37 @@
-<div style="padding: 20px;">
-  <h2>Registro de Libros</h2>
-  
-  <table border="1" style="width: 100%; text-align: left; border-collapse: collapse;">
-    <thead>
-      <tr style="background-color: #f2f2f2;">
-        <th>ID</th>
-        <th>Título</th>
-        <th>Formato</th>
-        <th>Precio</th>
-        <th>Autor</th>
-        <th>Categoría</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let libro of libros">
-        <td>{{ libro.id }}</td>
-        <td>{{ libro.titulo }}</td>
-        <td>{{ libro.formato }}</td>
-        <td>{{ libro.precio }}</td>
-        <td>{{ libro.autor?.nombre }}</td>
-        <td>{{ libro.categoria?.nombre }}</td>
-      </tr>
-      <tr *ngIf="libros.length === 0">
-        <td colspan="6" style="text-align: center;">No hay libros registrados o el backend está apagado.</td>
-      </tr>
-    </tbody>
-  </table>
+<div class="list-container">
+  <div class="list-header">
+    <h2>Inventario de Libros</h2>
+    <span class="badge-count">{{ libros.length }} registros</span>
+  </div>
+
+  <div class="table-wrapper">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Título</th>
+          <th>Formato</th>
+          <th>Precio</th>
+          <th>Autor</th>
+          <th>Categoría</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let libro of libros">
+          <td class="id-col">{{ libro.id }}</td>
+          <td class="titulo-col">{{ libro.titulo }}</td>
+          <td><span class="badge badge-formato">{{ libro.formato }}</span></td>
+          <td class="precio-col">${{ libro.precio | number:'1.2-2' }}</td>
+          <td>{{ libro.autor?.nombre }}</td>
+          <td><span class="badge badge-categoria">{{ libro.categoria?.nombre }}</span></td>
+        </tr>
+        <tr *ngIf="libros.length === 0">
+          <td colspan="6" class="empty-state">
+            <span>📭</span>
+            <p>No hay libros registrados o el backend no está disponible.</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

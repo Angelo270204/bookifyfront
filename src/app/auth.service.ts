@@ -25,6 +25,7 @@ export interface LoginResponse {
   mensaje: string;
   usuarioId: number | null;
   correo: string | null;
+  roles?: string[];
 }
 
 @Injectable({ providedIn: 'root' })

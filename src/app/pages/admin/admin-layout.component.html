@@ -1,0 +1,46 @@
+<div class="admin-shell">
+
+  <!-- Sidebar del administrador -->
+  <aside class="admin-sidebar">
+    <div class="brand">
+      <div class="logo-circle">B</div>
+      <div class="brand-text">
+        <span class="brand-name">Bookify</span>
+        <span class="brand-role">Panel Admin</span>
+      </div>
+    </div>
+
+    <nav class="nav-menu">
+      <span class="nav-section-label">Gestión</span>
+      <a routerLink="/admin/libros" routerLinkActive="active" class="nav-item">
+        <span class="nav-icon">📚</span>
+        <span>Libros</span>
+      </a>
+      <a routerLink="/admin/autores" routerLinkActive="active" class="nav-item">
+        <span class="nav-icon">✍️</span>
+        <span>Autores</span>
+      </a>
+      <a routerLink="/admin/categorias" routerLinkActive="active" class="nav-item">
+        <span class="nav-icon">🏷️</span>
+        <span>Categorías</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar">{{ correoAdmin[0].toUpperCase() }}</div>
+        <span class="user-email" [title]="correoAdmin">{{ correoAdmin }}</span>
+      </div>
+      <button class="logout-btn" (click)="cerrarSesion()" title="Cerrar sesión">
+        <span>🚪</span>
+        <span>Salir</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Área de contenido principal -->
+  <main class="admin-content">
+    <router-outlet></router-outlet>
+  </main>
+
+</div>
