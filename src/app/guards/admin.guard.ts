@@ -1,19 +1,13 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
+import { AuthStateService } from '../services/auth-state.service';
 
 export const adminGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
-  const rolesStr = localStorage.getItem('bookifyUserRoles');
+  const authState = inject(AuthStateService);
   
-  if (rolesStr) {
-    try {
-      const roles: string[] = JSON.parse(rolesStr);
-      if (roles.some(role => role.includes('ADMIN'))) {
-        return true;
-      }
-    } catch (e) {
-      console.error('Error al analizar los roles desde localStorage', e);
-    }
+  if (authState.isAdmin()) {
+    return true;
   }
 
   // Si no tiene el rol de admin, redirigir al login

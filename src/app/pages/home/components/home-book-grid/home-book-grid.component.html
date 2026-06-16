@@ -5,12 +5,12 @@
   </div>
 
   <div class="book-grid">
-    @for (book of books; track book.title) {
+    @for (book of books; track book.id) {
       <article class="book-card">
-        <div class="thumb" [style.backgroundImage]="'url(' + book.coverUrl + ')'" aria-hidden="true"></div>
-        <p class="category">{{ book.category }}</p>
-        <h3>{{ book.title }}</h3>
-        <p class="author">{{ book.author }}</p>
+        <div class="thumb" [style.backgroundImage]="'url(' + getCoverUrl(book) + ')'" aria-hidden="true"></div>
+        <p class="category">{{ book.categoria?.nombre || 'Sin categoría' }}</p>
+        <h3>{{ book.titulo }}</h3>
+        <p class="author">{{ book.autor?.nombre || 'Desconocido' }}</p>
       </article>
     }
   </div>

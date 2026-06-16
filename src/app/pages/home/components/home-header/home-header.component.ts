@@ -1,7 +1,9 @@
-import { Component, ElementRef, HostListener, inject } from '@angular/core';
+import { Component, ElementRef, HostListener, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, Router } from '@angular/router';
+import { AuthStateService } from '../../../../services/auth-state.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home-header',
@@ -10,13 +12,27 @@ import { RouterLink, Router } from '@angular/router';
   templateUrl: './home-header.component.html',
   styleUrl: './home-header.component.scss'
 })
-export class HomeHeaderComponent {
-  protected userEmail = localStorage.getItem('bookifyUserEmail');
-  protected isLoggedIn = !!this.userEmail;
+export class HomeHeaderComponent implements OnInit, OnDestroy {
+  protected userEmail: string | null = null;
+  protected isLoggedIn = false;
   protected isMenuOpen = false;
   protected textoBusqueda = '';
+  
   private readonly elementRef = inject(ElementRef);
   private readonly router = inject(Router);
+  private readonly authState = inject(AuthStateService);
+  private subs: Subscription[] = [];
+
+  ngOnInit(): void {
+    this.subs.push(
+      this.authState.isLoggedIn$.subscribe(isLoggedIn => this.isLoggedIn = isLoggedIn),
+      this.authState.email$.subscribe(email => this.userEmail = email)
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach(s => s.unsubscribe());
+  }
 
   // Getter para saber si estamos en la página Explorar
   get isExplorarPage(): boolean {
@@ -41,14 +57,8 @@ export class HomeHeaderComponent {
 
   logout(): void {
     this.closeMenu();
-    // Limpiar almacenamiento local
-    localStorage.removeItem('bookifyUserEmail');
-    localStorage.removeItem('bookifyUserRoles');
-    localStorage.removeItem('bookifyUserId');
-    
-    // Actualizar estado visual
-    this.userEmail = null;
-    this.isLoggedIn = false;
+    this.authState.logout();
+    this.router.navigate(['/login']);
   }
 
   // Navega a la página Explorar con el texto del buscador como parámetro

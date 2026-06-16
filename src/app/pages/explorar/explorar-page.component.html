@@ -109,9 +109,11 @@
           <img
             *ngIf="libro.portadaUrl"
             [src]="libro.portadaUrl"
-            [alt]="'Portada ' + libro.titulo"
+            [alt]="libro.titulo"
             class="portada-img"
             loading="lazy"
+            width="400"
+            height="600"
           >
           <div
             *ngIf="!libro.portadaUrl"

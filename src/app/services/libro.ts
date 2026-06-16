@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, shareReplay } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 import { Libro } from '../models/libro.interface'; 
 
@@ -9,9 +10,9 @@ import { Libro } from '../models/libro.interface';
 })
 export class LibroService {
   private http = inject(HttpClient);  
-  private apiUrl = 'http://localhost:8080/libros'; 
-  private autoresUrl = 'http://localhost:8080/autores';
-  private categoriasUrl = 'http://localhost:8080/categorias';
+  private apiUrl = `${environment.apiUrl}/libros`; 
+  private autoresUrl = `${environment.apiUrl}/autores`;
+  private categoriasUrl = `${environment.apiUrl}/categorias`;
 
   getLibrosPaginados(page: number = 0, size: number = 10): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/buscar?page=${page}&size=${size}`);
@@ -82,7 +83,7 @@ export class LibroService {
   uploadImagen(archivo: File): Observable<{ url: string }> {
     const formData = new FormData();
     formData.append('archivo', archivo);
-    return this.http.post<{ url: string }>('http://localhost:8080/upload/imagen', formData);
+    return this.http.post<{ url: string }>(`${environment.apiUrl}/upload/imagen`, formData);
   }
 
   // Actualiza solo la portada de un libro existente (llama al endpoint PATCH)
@@ -92,6 +93,6 @@ export class LibroService {
 
   // Elimina una imagen huérfana o cancelada de Cloudinary
   deleteImagen(url: string): Observable<any> {
-    return this.http.delete<any>('http://localhost:8080/upload/imagen', { body: { url } });
+    return this.http.delete<any>(`${environment.apiUrl}/upload/imagen`, { body: { url } });
   }
 }

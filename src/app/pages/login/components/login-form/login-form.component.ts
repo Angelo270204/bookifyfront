@@ -4,6 +4,7 @@ import { ChangeDetectorRef, Component, EventEmitter, Output, inject } from '@ang
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../../auth.service';
+import { AuthStateService } from '../../../../services/auth-state.service';
 
 @Component({
   selector: 'app-login-form',
@@ -15,6 +16,7 @@ export class LoginFormComponent {
   private readonly fb = inject(FormBuilder);
   private readonly authService = inject(AuthService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly authState = inject(AuthStateService);
 
   @Output() loginSuccess = new EventEmitter<string[]>();
 
@@ -48,15 +50,13 @@ export class LoginFormComponent {
 
         if (response.exito) {
           this.loginForm.reset();
-          if (response.usuarioId !== null) {
-            localStorage.setItem('bookifyUserId', String(response.usuarioId));
-          }
-          if (response.correo) {
-            localStorage.setItem('bookifyUserEmail', response.correo);
-          }
-          if (response.roles) {
-            localStorage.setItem('bookifyUserRoles', JSON.stringify(response.roles));
-          }
+          
+          this.authState.setLoginState(
+            response.correo || '',
+            response.roles || [],
+            String(response.usuarioId || '')
+          );
+          
           this.responseMessage = '';
           this.responseType = '';
           this.loginSuccess.emit(response.roles || []);
