@@ -17,6 +17,31 @@ export class LibroService {
     return this.http.get<any>(`${this.apiUrl}/buscar?page=${page}&size=${size}`);
   }
 
+  // Búsqueda avanzada con filtros dinámicos (para la página Explorar)
+  buscarLibros(filtros: {
+    titulo?: string;
+    autorNombre?: string;
+    categoriaNombre?: string;
+    precioMin?: number;
+    precioMax?: number;
+    formato?: string;
+    sort?: string;
+    page?: number;
+    size?: number;
+  }): Observable<any> {
+    const params = new URLSearchParams();
+    if (filtros.titulo) params.set('titulo', filtros.titulo);
+    if (filtros.autorNombre) params.set('autorNombre', filtros.autorNombre);
+    if (filtros.categoriaNombre) params.set('categoriaNombre', filtros.categoriaNombre);
+    if (filtros.precioMin !== undefined) params.set('precioMin', String(filtros.precioMin));
+    if (filtros.precioMax !== undefined) params.set('precioMax', String(filtros.precioMax));
+    if (filtros.formato) params.set('formato', filtros.formato);
+    if (filtros.sort) params.set('sort', filtros.sort);
+    params.set('page', String(filtros.page ?? 0));
+    params.set('size', String(filtros.size ?? 12));
+    return this.http.get<any>(`${this.apiUrl}/buscar?${params.toString()}`);
+  }
+
   // Obtiene los últimos libros agregados, ordenados por fecha de registro descendente
   getNuevosLanzamientos(size: number = 10): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/buscar?sort=fechaRegistro,desc&size=${size}`);

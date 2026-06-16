@@ -9,6 +9,7 @@
   background: linear-gradient(170deg, rgba(255, 255, 255, 0.9), rgba(237, 244, 250, 0.9));
   border: 1px solid rgba(62, 88, 114, 0.12);
   box-shadow: 0 18px 34px rgba(28, 45, 69, 0.12);
+  z-index: 50;
 }
 
 .brand {
@@ -27,6 +28,7 @@
   font-weight: 800;
   color: #113f71;
   background: linear-gradient(150deg, #badff6, #e2f0f9);
+  flex-shrink: 0;
 }
 
 .name {
@@ -81,10 +83,88 @@
   color: #1a446f;
 }
 
+.item span:not(.icon) {
+  white-space: nowrap;
+}
+
+/* ========================================================
+   BOTTOM NAVIGATION BAR EN MÓVILES (ESTILO APP)
+   ======================================================== */
 @media (max-width: 1080px) {
   .sidebar {
-    position: static;
-    height: auto;
-    border-radius: 18px;
+    /* Posición fija en la base de la pantalla */
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    border-radius: 20px 20px 0 0;
+    padding: 0 1rem;
+    
+    /* Efecto "Glassmorphism" para que se vea premium encima del contenido */
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: none;
+    border-top: 1px solid rgba(62, 88, 114, 0.1);
+    box-shadow: 0 -4px 20px rgba(28, 45, 69, 0.08);
+  }
+
+  /* Ocultamos el logo gigante en la barra inferior */
+  .brand {
+    display: none;
+  }
+
+  .menu {
+    margin: 0;
+    height: 100%;
+    /* Distribuimos los íconos horizontalmente */
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 0;
+  }
+
+  .item {
+    /* Cambiamos la orientación a vertical: Ícono arriba, texto pequeñito abajo */
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.4rem;
+    border-radius: 8px;
+    background: transparent;
+  }
+
+  .item:hover {
+    transform: none;
+    background: transparent;
+  }
+
+  .item .icon {
+    /* Hacemos el ícono más grande para que sea táctil */
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    font-size: 1.1rem;
+    background: transparent;
+    transition: all 0.2s ease;
+  }
+
+  /* Texto super chiquito estilo app */
+  .item span:not(.icon) {
+    font-size: 0.65rem;
+    font-weight: 700;
+  }
+
+  /* Animación del ítem activo */
+  .item.active {
+    background: transparent;
+  }
+
+  .item.active .icon {
+    background: linear-gradient(140deg, #1f4d79, #225f91);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(22, 58, 93, 0.25);
+    transform: translateY(-4px);
   }
 }

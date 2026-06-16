@@ -5,10 +5,14 @@ import { RegisterPageComponent } from './pages/register/register-page.component'
 import { adminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'login' },
+  { path: '', pathMatch: 'full', redirectTo: 'home' },
   { path: 'login', component: LoginPageComponent },
   { path: 'register', component: RegisterPageComponent },
   { path: 'home', component: HomePageComponent },
+  {
+    path: 'explorar',
+    loadComponent: () => import('./pages/explorar/explorar-page.component').then(m => m.ExplorarPageComponent)
+  },
 
   // Panel de administración con layout anidado
   {

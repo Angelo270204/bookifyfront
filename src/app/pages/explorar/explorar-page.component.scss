@@ -1,0 +1,450 @@
+/* ======================================
+   LAYOUT PRINCIPAL
+   ====================================== */
+.explorar-layout {
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: 100vh;
+  padding: 1rem 1.35rem 5rem;
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 1rem;
+}
+
+.main-area {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+/* ======================================
+   TARJETA DE FILTROS (REDISEÑADA)
+   ====================================== */
+.filtros-card {
+  background: var(--surface-card);
+  border-radius: 18px;
+  border: 1px solid rgba(56, 74, 97, 0.12);
+  box-shadow: 0 8px 24px rgba(31, 48, 72, 0.07);
+  padding: 1.5rem 1.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.filtros-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.titulo-explorar {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--text-title);
+}
+
+.subtitulo-explorar {
+  margin: 0.25rem 0 0;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+/* Barra separadora */
+.filtro-divider {
+  border: none;
+  border-top: 1px solid rgba(56, 74, 97, 0.08);
+  margin: 0;
+}
+
+/* Fila 1: Búsqueda Principal */
+.filtro-busqueda-wrapper {
+  width: 100%;
+}
+
+.filtro-busqueda {
+  display: flex;
+  align-items: center;
+  background: #f8fbfe;
+  border: 1.5px solid rgba(31, 95, 147, 0.18);
+  border-radius: 12px;
+  padding: 0 1rem;
+  transition: all 0.2s;
+
+  &:focus-within {
+    border-color: #2a7cc7;
+    box-shadow: 0 0 0 4px rgba(42, 124, 199, 0.12);
+    background: #fff;
+  }
+}
+
+.filtro-icono {
+  font-size: 1.1rem;
+  color: #2a7cc7;
+  opacity: 0.8;
+}
+
+.filtro-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 0.85rem 0.8rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--text-main);
+  outline: none;
+
+  &::placeholder { color: #8ba5bd; }
+}
+
+/* Fila 2: Selects adicionales */
+.filtros-controles {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.filtro-grupo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.filtro-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #5c7b99;
+  white-space: nowrap;
+}
+
+.filtro-select {
+  padding: 0.55rem 2.2rem 0.55rem 0.85rem;
+  border: 1px solid rgba(31, 95, 147, 0.15);
+  border-radius: 10px;
+  background: #f8fbfe url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23617992' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 0.8rem center;
+  appearance: none;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-main);
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  min-width: 200px;
+
+  &:focus {
+    outline: none;
+    border-color: #2a7cc7;
+    box-shadow: 0 0 0 3px rgba(42, 124, 199, 0.12);
+    background-color: #fff;
+  }
+}
+
+/* Fila 3: Chips de Categoría y Formato */
+.filtros-chips-seccion {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.chips-grupo {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.chips-grupo .filtro-label {
+  margin-top: 0.4rem;
+  min-width: 80px;
+}
+
+.chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  border: 1px solid rgba(31, 95, 147, 0.15);
+  background: #f4f8fc;
+  color: #3b5c7e;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+
+  &:hover {
+    border-color: #2a7cc7;
+    background: rgba(42, 124, 199, 0.05);
+  }
+}
+
+.chip-activo {
+  background: linear-gradient(135deg, #113d6f, #2a7cc7) !important;
+  border-color: transparent !important;
+  color: #fff !important;
+  box-shadow: 0 4px 12px rgba(17, 61, 111, 0.25);
+}
+
+/* Botón Limpiar */
+.btn-limpiar {
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  border: 1px solid rgba(224, 80, 80, 0.3);
+  background: rgba(224, 80, 80, 0.05);
+  color: #e05050;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(224, 80, 80, 0.1);
+    border-color: rgba(224, 80, 80, 0.5);
+  }
+}
+
+
+/* ======================================
+   GRID DE LIBROS
+   ====================================== */
+.libro-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.2rem;
+}
+
+.libro-card {
+  background: var(--surface-card);
+  border-radius: 16px;
+  border: 1px solid rgba(56, 74, 97, 0.1);
+  overflow: hidden;
+  position: relative;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 16px 40px rgba(28, 45, 69, 0.18);
+
+    .card-overlay {
+      opacity: 1;
+    }
+  }
+}
+
+.portada-wrap {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  background: #e8f0f8;
+}
+
+.portada-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+
+  .libro-card:hover & {
+    transform: scale(1.04);
+  }
+}
+
+.portada-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: rgba(255,255,255,0.6);
+}
+
+.libro-info {
+  padding: 0.9rem 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.badge-formato {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: rgba(42, 124, 199, 0.1);
+  color: #2a7cc7;
+  align-self: flex-start;
+  margin-bottom: 0.1rem;
+}
+
+.libro-titulo {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--text-title);
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.libro-autor {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.libro-precio {
+  margin: 0.3rem 0 0;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #2a7cc7;
+}
+
+.card-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem;
+  background: linear-gradient(to top, rgba(11, 30, 55, 0.85) 0%, transparent 100%);
+  display: flex;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.btn-ver {
+  padding: 0.55rem 1.5rem;
+  border: 1.5px solid rgba(255,255,255,0.6);
+  border-radius: 10px;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease;
+
+  &:hover { background: rgba(255,255,255,0.22); }
+}
+
+/* ======================================
+   SKELETON & ESTADO VACÍO & PAGINACIÓN
+   ====================================== */
+.skeleton-card {
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--surface-card);
+  border: 1px solid rgba(56, 74, 97, 0.08);
+  padding-bottom: 1rem;
+}
+
+.skeleton-portada {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  background: linear-gradient(90deg, #e8f0f8 25%, #d5e4f0 50%, #e8f0f8 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+.skeleton-linea {
+  height: 12px;
+  border-radius: 6px;
+  margin: 0.75rem 1rem 0;
+  background: linear-gradient(90deg, #e8f0f8 25%, #d5e4f0 50%, #e8f0f8 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  &.largo { width: calc(100% - 2rem); }
+  &.medio { width: 65%; }
+  &.corto { width: 35%; }
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.estado-vacio {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: var(--surface-card);
+  border-radius: 18px;
+  border: 1px dashed rgba(31, 95, 147, 0.2);
+}
+.vacio-icono { font-size: 4rem; margin-bottom: 1rem; }
+.estado-vacio h3 { margin: 0 0 0.5rem; font-size: 1.2rem; font-weight: 800; color: var(--text-title); }
+.estado-vacio p { margin: 0 0 1.5rem; color: var(--text-muted); font-size: 0.9rem; }
+
+.btn-limpiar-vacio {
+  padding: 0.7rem 1.8rem;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #113d6f, #2a7cc7);
+  color: #fff;
+  font: inherit; font-size: 0.9rem; font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(17, 61, 111, 0.3);
+  transition: opacity 0.2s, transform 0.15s;
+  &:hover { opacity: 0.9; transform: translateY(-1px); }
+}
+
+.paginacion { display: flex; align-items: center; justify-content: center; gap: 0.75rem; padding: 1rem 0; }
+.btn-pag {
+  padding: 0.55rem 1.2rem; border-radius: 10px; border: 1.5px solid rgba(31, 95, 147, 0.2);
+  background: var(--surface-card); color: #2a7cc7; font: inherit; font-size: 0.85rem; font-weight: 700;
+  cursor: pointer; transition: all 0.2s ease;
+  &:hover:not([disabled]) { background: #2a7cc7; color: #fff; border-color: #2a7cc7; }
+  &[disabled] { opacity: 0.4; cursor: not-allowed; }
+}
+.pag-nums { display: flex; gap: 0.35rem; }
+.btn-pag-num {
+  width: 36px; height: 36px; border-radius: 8px; border: 1.5px solid rgba(31, 95, 147, 0.15);
+  background: var(--surface-card); color: var(--text-main); font: inherit; font-size: 0.85rem; font-weight: 700;
+  cursor: pointer; transition: all 0.2s ease;
+  &:hover { border-color: #2a7cc7; color: #2a7cc7; }
+  &.activo {
+    background: linear-gradient(135deg, #113d6f, #2a7cc7); border-color: transparent; color: #fff;
+    box-shadow: 0 4px 10px rgba(17, 61, 111, 0.25);
+  }
+}
+
+/* ======================================
+   RESPONSIVE
+   ====================================== */
+@media (max-width: 1200px) {
+  .libro-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 1080px) {
+  .explorar-layout { grid-template-columns: 1fr; padding: 1rem 1rem 5.5rem; }
+  .filtros-controles { flex-wrap: wrap; gap: 1rem; }
+  .filtro-select { min-width: 150px; }
+  .chips-grupo { flex-direction: column; gap: 0.5rem; }
+}
+@media (max-width: 760px) {
+  .libro-grid { grid-template-columns: repeat(2, 1fr); }
+  .filtros-controles { flex-direction: column; align-items: stretch; }
+  .filtro-grupo { flex-direction: column; align-items: stretch; gap: 0.5rem; }
+}
+@media (max-width: 480px) {
+  .libro-grid { grid-template-columns: 1fr; }
+  .pag-nums { display: none; }
+}

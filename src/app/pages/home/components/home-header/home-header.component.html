@@ -1,33 +1,50 @@
 <header class="header">
-  <div class="brand">
-    <span class="logo">B</span>
-    <div>
-      <p class="name">Bookify</p>
-      <p class="tag">Descubre tu proxima gran lectura</p>
-    </div>
+  
+  <!-- Mensaje decorativo para llenar el espacio vacío en la página Explorar -->
+  <div class="header-greeting" *ngIf="isExplorarPage">
+    <span class="greeting-icon">✨</span>
+    <span class="greeting-text">Encuentra tu próxima lectura...</span>
   </div>
 
-  <nav class="menu" aria-label="Navegacion principal">
-    <a href="#destacados">Destacados</a>
-    <a href="#colecciones">Colecciones</a>
-    <a href="#nuevos">Nuevos</a>
-  </nav>
+  <!-- Buscador Integrado (Oculto en Explorar para evitar redundancia) -->
+  <div class="search-container" *ngIf="!isExplorarPage">
+    <span class="search-icon">🔍</span>
+    <input
+      type="text"
+      class="search-input"
+      placeholder="Buscar título, autor o categoría..."
+      [(ngModel)]="textoBusqueda"
+      (keydown)="onBusquedaEnter($event)"
+    >
+    <button class="btn-search" (click)="buscarRapido()">Buscar</button>
+  </div>
 
-  <div class="profile" [class.open]="isMenuOpen">
-    <button type="button" class="profile-trigger" (click)="toggleMenu()">
-      <div class="avatar" aria-hidden="true">{{ userEmail.charAt(0).toUpperCase() }}</div>
-      <div class="profile-info">
-        <p class="profile-title">Perfil</p>
-        <p class="profile-email">{{ userEmail }}</p>
+  <!-- Controles de Usuario -->
+  <div class="user-controls">
+    <!-- Vista para usuario logeado -->
+    <div class="profile" [class.open]="isMenuOpen" *ngIf="isLoggedIn">
+      <button type="button" class="profile-trigger" (click)="toggleMenu()">
+        <div class="avatar" aria-hidden="true">{{ userEmail?.charAt(0)?.toUpperCase() }}</div>
+        <div class="profile-info">
+          <p class="profile-title">Perfil</p>
+          <p class="profile-email">{{ userEmail }}</p>
+        </div>
+        <span class="chevron" aria-hidden="true">▾</span>
+      </button>
+
+      <div class="menu-dropdown" role="menu" aria-label="Opciones de perfil">
+        <a role="menuitem" href="#perfil" (click)="closeMenu()">Ver perfil</a>
+        <a role="menuitem" href="#favoritos" (click)="closeMenu()">Favoritos</a>
+        <a role="menuitem" href="#config" (click)="closeMenu()">Configuración</a>
+        <a role="menuitem" routerLink="/admin" (click)="closeMenu()">Administración</a>
+        <a role="menuitem" routerLink="/login" (click)="logout()">Cerrar sesión</a>
       </div>
-      <span class="chevron" aria-hidden="true">▾</span>
-    </button>
+    </div>
 
-    <div class="menu-dropdown" role="menu" aria-label="Opciones de perfil">
-      <a role="menuitem" href="#perfil" (click)="closeMenu()">Ver perfil</a>
-      <a role="menuitem" href="#favoritos" (click)="closeMenu()">Favoritos</a>
-      <a role="menuitem" href="#config" (click)="closeMenu()">Configuracion</a>
-      <a role="menuitem" routerLink="/login" (click)="closeMenu()">Cerrar sesion</a>
+    <!-- Vista para usuario NO logeado -->
+    <div class="auth-buttons" *ngIf="!isLoggedIn">
+      <a routerLink="/login" class="btn-login">Iniciar sesión</a>
+      <a routerLink="/register" class="btn-register">Regístrate</a>
     </div>
   </div>
 </header>

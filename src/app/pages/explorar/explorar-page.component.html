@@ -1,0 +1,173 @@
+<main class="explorar-layout">
+  <app-home-sidebar></app-home-sidebar>
+
+  <section class="main-area">
+    <app-home-header></app-home-header>
+
+    <!-- === CONTROLES DE BÚSQUEDA Y FILTROS === -->
+    <div class="filtros-card">
+
+      <!-- Título + Resumen -->
+      <div class="filtros-header">
+        <div>
+          <h1 class="titulo-explorar">Explorar Catálogo</h1>
+          <p class="subtitulo-explorar" *ngIf="!cargando">
+            {{ totalElementos }} libros encontrados
+          </p>
+        </div>
+        <button class="btn-limpiar" *ngIf="hayFiltrosActivos" (click)="limpiarFiltros()">
+          ✕ Limpiar filtros
+        </button>
+      </div>
+
+      <!-- Buscador de texto principal (Fila 1) -->
+      <div class="filtro-busqueda-wrapper">
+        <div class="filtro-busqueda">
+          <span class="filtro-icono">🔍</span>
+          <input
+            type="text"
+            class="filtro-input"
+            placeholder="Busca un libro por su título..."
+            [(ngModel)]="busqueda"
+            (ngModelChange)="onTextoCambia()"
+          >
+        </div>
+      </div>
+
+      <hr class="filtro-divider">
+
+      <!-- Controles de filtros adicionales (Fila 2) -->
+      <div class="filtros-controles">
+        
+        <div class="filtro-grupo">
+          <span class="filtro-label">Autor:</span>
+          <select class="filtro-select" [(ngModel)]="autorSeleccionado" (change)="buscar(0)">
+            <option value="">Todos los autores</option>
+            <option *ngFor="let a of autores" [value]="a.nombre">{{ a.nombre }}</option>
+          </select>
+        </div>
+
+        <div class="filtro-grupo">
+          <span class="filtro-label">Ordenar por:</span>
+          <select class="filtro-select" [(ngModel)]="ordenSeleccionado" (change)="buscar(0)">
+            <option *ngFor="let op of opcionesOrden" [value]="op.valor">{{ op.etiqueta }}</option>
+          </select>
+        </div>
+
+      </div>
+
+      <!-- Chips de Categoría y Formato (Fila 3) -->
+      <div class="filtros-chips-seccion">
+        <div class="chips-grupo">
+          <span class="filtro-label">Formato:</span>
+          <div class="chips-row">
+            <button
+              *ngFor="let f of formatos"
+              class="chip"
+              [class.chip-activo]="formatoSeleccionado === f.valor"
+              (click)="filtrarPorFormato(f.valor)"
+            >{{ f.etiqueta }}</button>
+          </div>
+        </div>
+
+        <div class="chips-grupo">
+          <span class="filtro-label">Categorías:</span>
+          <div class="chips-row">
+            <button
+              class="chip chip-categoria"
+              [class.chip-activo]="categoriaSeleccionada === ''"
+              (click)="filtrarPorCategoria('')"
+            >Todas</button>
+            <button
+              *ngFor="let cat of categorias"
+              class="chip chip-categoria"
+              [class.chip-activo]="categoriaSeleccionada === cat.nombre"
+              (click)="filtrarPorCategoria(cat.nombre)"
+            >{{ cat.nombre }}</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- === SKELETON LOADER === -->
+    <div class="libro-grid" *ngIf="cargando">
+      <div class="skeleton-card" *ngFor="let s of cargandoEsqueletos">
+        <div class="skeleton-portada"></div>
+        <div class="skeleton-linea largo"></div>
+        <div class="skeleton-linea medio"></div>
+        <div class="skeleton-linea corto"></div>
+      </div>
+    </div>
+
+    <!-- === GRID DE RESULTADOS === -->
+    <div class="libro-grid" *ngIf="!cargando && libros.length > 0">
+      <article class="libro-card" *ngFor="let libro of libros">
+
+        <!-- Portada -->
+        <div class="portada-wrap">
+          <img
+            *ngIf="libro.portadaUrl"
+            [src]="libro.portadaUrl"
+            [alt]="'Portada ' + libro.titulo"
+            class="portada-img"
+            loading="lazy"
+          >
+          <div
+            *ngIf="!libro.portadaUrl"
+            class="portada-placeholder"
+            [style.background]="colorPortada(libro.id)"
+          >
+            <span>{{ libro.titulo?.charAt(0)?.toUpperCase() }}</span>
+          </div>
+        </div>
+
+        <!-- Info del libro -->
+        <div class="libro-info">
+          <span class="badge-formato" *ngIf="libro.formato">{{ libro.formato }}</span>
+          <h3 class="libro-titulo">{{ libro.titulo }}</h3>
+          <p class="libro-autor">{{ libro.autorNombre || 'Autor desconocido' }}</p>
+          <p class="libro-precio">${{ libro.precio | number:'1.2-2' }}</p>
+        </div>
+
+        <!-- Overlay de hover -->
+        <div class="card-overlay">
+          <button class="btn-ver">Ver libro</button>
+        </div>
+      </article>
+    </div>
+
+    <!-- === ESTADO VACÍO === -->
+    <div class="estado-vacio" *ngIf="!cargando && libros.length === 0">
+      <div class="vacio-icono">🔍</div>
+      <h3>No encontramos libros</h3>
+      <p>Intenta con otros filtros o una búsqueda diferente.</p>
+      <button class="btn-limpiar-vacio" (click)="limpiarFiltros()">Limpiar filtros</button>
+    </div>
+
+    <!-- === PAGINACIÓN === -->
+    <div class="paginacion" *ngIf="!cargando && totalPaginas > 1">
+      <button
+        class="btn-pag"
+        [disabled]="paginaActual === 0"
+        (click)="buscar(paginaActual - 1)"
+      >← Anterior</button>
+
+      <div class="pag-nums">
+        <button
+          *ngFor="let p of [].constructor(totalPaginas); let i = index"
+          class="btn-pag-num"
+          [class.activo]="i === paginaActual"
+          (click)="buscar(i)"
+        >{{ i + 1 }}</button>
+      </div>
+
+      <button
+        class="btn-pag"
+        [disabled]="paginaActual === totalPaginas - 1"
+        (click)="buscar(paginaActual + 1)"
+      >Siguiente →</button>
+    </div>
+
+  </section>
+</main>
