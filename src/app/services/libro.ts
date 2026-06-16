@@ -17,6 +17,11 @@ export class LibroService {
     return this.http.get<any>(`${this.apiUrl}/buscar?page=${page}&size=${size}`);
   }
 
+  // Obtiene los últimos libros agregados, ordenados por fecha de registro descendente
+  getNuevosLanzamientos(size: number = 10): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/buscar?sort=fechaRegistro,desc&size=${size}`);
+  }
+
   getLibroById(id: number): Observable<Libro> {
     return this.http.get<Libro>(`${this.apiUrl}/${id}`);
   }

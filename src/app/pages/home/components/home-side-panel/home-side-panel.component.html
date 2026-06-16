@@ -1,29 +1,49 @@
 <aside class="panel" id="nuevos">
   <section>
-    <h3>Nuevos lanzamientos</h3>
-    <ul>
-      <li>
-        <img
-          src="https://images.unsplash.com/photo-1528207776546-365bb710ee93?auto=format&fit=crop&w=200&q=80"
-          alt="Portada Ciudad de cristal y lluvia"
-        />
-        <span>Ciudad de cristal y lluvia</span>
-      </li>
-      <li>
-        <img
-          src="https://images.unsplash.com/photo-1491841550275-ad7854e35ca6?auto=format&fit=crop&w=200&q=80"
-          alt="Portada La casa de los domingos"
-        />
-        <span>La casa de los domingos</span>
-      </li>
-      <li>
-        <img
-          src="https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=200&q=80"
-          alt="Portada Atlas breve de curiosidades"
-        />
-        <span>Atlas breve de curiosidades</span>
+    <h3>🔥 Nuevos Lanzamientos</h3>
+
+    <!-- Skeleton de carga -->
+    <ul *ngIf="cargando" class="skeleton-list">
+      <li class="skeleton-item" *ngFor="let i of [1,2,3,4,5]">
+        <div class="skeleton-img"></div>
+        <div class="skeleton-text">
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line short"></div>
+        </div>
       </li>
     </ul>
+
+    <!-- Lista real de nuevos lanzamientos -->
+    <ul *ngIf="!cargando && nuevosLanzamientos.length > 0">
+      <li *ngFor="let libro of nuevosLanzamientos; let i = index">
+
+        <!-- Portada real o placeholder virtual -->
+        <div class="portada-mini"
+             [style.background]="libro.portadaUrl ? 'none' : obtenerColorPortada(i)">
+          <img
+            *ngIf="libro.portadaUrl"
+            [src]="libro.portadaUrl"
+            [alt]="'Portada ' + libro.titulo"
+            class="portada-img"
+          />
+          <span *ngIf="!libro.portadaUrl" class="portada-inicial">
+            {{ libro.titulo?.charAt(0)?.toUpperCase() }}
+          </span>
+        </div>
+
+        <!-- Info -->
+        <div class="libro-mini-info">
+          <span class="libro-mini-titulo">{{ libro.titulo }}</span>
+          <span class="libro-mini-autor">{{ libro.autorNombre }}</span>
+        </div>
+
+      </li>
+    </ul>
+
+    <!-- Sin datos -->
+    <p class="sin-datos" *ngIf="!cargando && nuevosLanzamientos.length === 0">
+      No hay novedades disponibles.
+    </p>
   </section>
 
   <section>
