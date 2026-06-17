@@ -17,7 +17,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
       </div>
 
       <div class="acciones">
-        <a routerLink="/" class="btn-primary">Ir a mi biblioteca</a>
+        <a routerLink="/mi-biblioteca" class="btn-primary">Ir a mi biblioteca</a>
         <a routerLink="/explorar" class="btn-secondary">Seguir explorando</a>
       </div>
     </div>

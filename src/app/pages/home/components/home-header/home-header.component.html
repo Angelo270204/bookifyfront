@@ -28,10 +28,9 @@
       </button>
 
       <div class="menu-dropdown" role="menu" aria-label="Opciones de perfil">
+        <a role="menuitem" routerLink="/mi-biblioteca" (click)="closeMenu()">Mi Biblioteca</a>
         <a role="menuitem" href="#perfil" (click)="closeMenu()">Ver perfil</a>
-        <a role="menuitem" href="#favoritos" (click)="closeMenu()">Favoritos</a>
         <a role="menuitem" href="#config" (click)="closeMenu()">Configuración</a>
-        <a role="menuitem" routerLink="/admin" (click)="closeMenu()">Administración</a>
         <a role="menuitem" routerLink="/login" (click)="logout()">Cerrar sesión</a>
       </div>
     </div>

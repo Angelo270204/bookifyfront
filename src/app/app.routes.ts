@@ -21,6 +21,11 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/explorar/explorar-page.component').then(m => m.ExplorarPageComponent)
       },
       {
+        path: 'mi-biblioteca',
+        title: 'Mi Biblioteca — Bookify',
+        loadComponent: () => import('./pages/biblioteca/biblioteca-page.component').then(m => m.BibliotecaPageComponent)
+      },
+      {
         path: 'libro/:id',
         title: 'Detalles del Libro — Bookify',
         loadComponent: () => import('./pages/detalle-libro/detalle-libro-page.component').then(m => m.DetalleLibroPageComponent)

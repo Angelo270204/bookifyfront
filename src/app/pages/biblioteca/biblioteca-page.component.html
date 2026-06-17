@@ -1,0 +1,49 @@
+<div class="biblioteca-container">
+  <div class="biblioteca-header">
+    <h1>Mi Biblioteca Personal</h1>
+    <p>Todos los libros que has adquirido están aquí.</p>
+  </div>
+
+  <div class="alert alert-info" *ngIf="mensajeInfo">
+    {{ mensajeInfo }}
+  </div>
+
+  <div class="alert alert-error" *ngIf="mensajeError">
+    {{ mensajeError }}
+  </div>
+
+  <div class="loading-state" *ngIf="cargando">
+    <div class="spinner"></div>
+    <p>Cargando tus libros...</p>
+  </div>
+
+  <div class="empty-state" *ngIf="!cargando && misLibros.length === 0">
+    <div class="empty-icon">📚</div>
+    <h3>Aún no tienes libros</h3>
+    <p>Explora nuestro catálogo y descubre tu próxima gran lectura.</p>
+    <a href="/explorar" class="btn-primary">Explorar Catálogo</a>
+  </div>
+
+  <div class="libros-grid" *ngIf="!cargando && misLibros.length > 0">
+    <div class="libro-card" *ngFor="let libro of misLibros; let i = index">
+      
+      <div class="portada-container">
+        <img *ngIf="libro.portadaUrl" [src]="libro.portadaUrl" [alt]="libro.titulo" class="portada-img">
+        <div *ngIf="!libro.portadaUrl" class="portada-placeholder" [style.background]="colorPortada(i)">
+          <span>{{ libro.titulo.charAt(0) }}</span>
+        </div>
+      </div>
+
+      <div class="libro-info">
+        <h3 class="titulo">{{ libro.titulo }}</h3>
+        <p class="autor" *ngIf="libro.autor?.nombre">Por {{ libro.autor?.nombre }}</p>
+        <p class="formato">{{ libro.formato }}</p>
+      </div>
+
+      <div class="libro-actions">
+        <button class="btn-acceder" (click)="accederLibro(libro)">Leer / Acceder</button>
+      </div>
+      
+    </div>
+  </div>
+</div>
