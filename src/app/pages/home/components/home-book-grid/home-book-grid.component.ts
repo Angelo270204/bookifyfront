@@ -18,8 +18,27 @@ export class HomeBookGridComponent implements OnInit {
   cargando = true;
 
   ngOnInit(): void {
-    // Pedir los primeros 6 libros para el grid de "Colecciones recomendadas"
-    this.libroService.getLibrosPaginados(0, 6).subscribe({
+    // 1. Intentar cargar los libros más populares históricamente
+    this.libroService.getTopLibros('siempre').subscribe({
+      next: (resp) => {
+        if (resp && Array.isArray(resp) && resp.length > 0) {
+          this.books = resp;
+          this.cargando = false;
+          this.cdr.detectChanges();
+        } else {
+          // Fallback: si no hay ventas en la BD, cargar la paginación normal
+          this.cargarFallback();
+        }
+      },
+      error: (err) => {
+        console.error('Error al cargar top libros históricos:', err);
+        this.cargarFallback();
+      }
+    });
+  }
+
+  private cargarFallback(): void {
+    this.libroService.getLibrosPaginados(0, 8).subscribe({
       next: (resp) => {
         if (resp && resp.content) {
           this.books = resp.content;
@@ -30,7 +49,7 @@ export class HomeBookGridComponent implements OnInit {
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('Error al cargar libros para el grid:', err);
+        console.error('Error en fallback de grid de libros:', err);
         this.cargando = false;
         this.cdr.detectChanges();
       }

@@ -48,6 +48,11 @@ export class LibroService {
     return this.http.get<any>(`${this.apiUrl}/buscar?sort=fechaRegistro,desc&size=${size}`);
   }
 
+  // Obtiene los libros más vendidos / populares según historial de compras
+  getTopLibros(periodo: 'hoy' | 'semana' | 'siempre' = 'siempre'): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/top?periodo=${periodo}`);
+  }
+
   getLibroById(id: number): Observable<Libro> {
     return this.http.get<Libro>(`${this.apiUrl}/${id}`);
   }

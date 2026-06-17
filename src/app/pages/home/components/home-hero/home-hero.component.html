@@ -1,12 +1,12 @@
 <section class="hero" id="destacados" *ngIf="!cargando && featuredBook">
   <div class="info">
-    <p class="eyebrow">Libro destacado</p>
+    <p class="eyebrow">Destacado del Día</p>
     <h1>{{ featuredBook.titulo }}</h1>
-    <p class="author">Por {{ featuredBook.autor?.nombre || 'Desconocido' }}</p>
+    <p class="author">Por {{ featuredBook.autorNombre || featuredBook.autor?.nombre || 'Desconocido' }}</p>
     <p class="description">
       {{ featuredBook.descripcion || 'Sin descripción' }}
     </p>
-    <button type="button" [routerLink]="['/explorar']" [queryParams]="{q: featuredBook.titulo}">Ver detalles</button>
+    <button type="button" [routerLink]="['/libro', featuredBook.id]">Ver detalles</button>
   </div>
   <div class="cover" [style.backgroundImage]="'url(' + getCoverUrl() + ')'" aria-hidden="true"></div>
 </section>

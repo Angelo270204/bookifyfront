@@ -18,7 +18,26 @@ export class HomeHeroComponent implements OnInit {
   cargando = true;
 
   ngOnInit(): void {
-    // Pedir el último libro agregado para destacarlo
+    // 1. Intentar cargar el libro más vendido de HOY
+    this.libroService.getTopLibros('hoy').subscribe({
+      next: (resp) => {
+        if (resp && Array.isArray(resp) && resp.length > 0) {
+          this.featuredBook = resp[0];
+          this.cargando = false;
+          this.cdr.detectChanges();
+        } else {
+          // Fallback: si no hay ventas hoy, cargar el último libro agregado
+          this.cargarFallback();
+        }
+      },
+      error: (err) => {
+        console.error('Error al cargar top libros de hoy:', err);
+        this.cargarFallback();
+      }
+    });
+  }
+
+  private cargarFallback(): void {
     this.libroService.getNuevosLanzamientos(1).subscribe({
       next: (resp) => {
         if (resp && resp.content && resp.content.length > 0) {
@@ -30,7 +49,7 @@ export class HomeHeroComponent implements OnInit {
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('Error al cargar libro destacado:', err);
+        console.error('Error en fallback de libro destacado:', err);
         this.cargando = false;
         this.cdr.detectChanges();
       }

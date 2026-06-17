@@ -27,7 +27,28 @@ export class HomeSidePanelComponent implements OnInit {
   cargando = true;
 
   ngOnInit(): void {
-    this.libroService.getNuevosLanzamientos(3).subscribe({
+    // 1. Intentar cargar las tendencias de la semana
+    this.libroService.getTopLibros('semana').subscribe({
+      next: (response) => {
+        if (response && Array.isArray(response) && response.length > 0) {
+          // Tomar los top 4 de la semana
+          this.nuevosLanzamientos = response.slice(0, 4);
+          this.cargando = false;
+          this.cdr.detectChanges();
+        } else {
+          // Fallback: si no hay ventas en la BD, cargar nuevos lanzamientos genéricos
+          this.cargarFallback();
+        }
+      },
+      error: (err) => {
+        console.error('Error al cargar top libros de la semana:', err);
+        this.cargarFallback();
+      }
+    });
+  }
+
+  private cargarFallback(): void {
+    this.libroService.getNuevosLanzamientos(4).subscribe({
       next: (response) => {
         if (response && response.content) {
           this.nuevosLanzamientos = response.content;
@@ -38,7 +59,7 @@ export class HomeSidePanelComponent implements OnInit {
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('Error al cargar nuevos lanzamientos:', err);
+        console.error('Error en fallback de side panel:', err);
         this.cargando = false;
         this.cdr.detectChanges();
       }

@@ -1,6 +1,6 @@
 <section class="grid-block" id="colecciones">
   <div class="section-head">
-    <h2>Colecciones recomendadas</h2>
+    <h2>Los más populares</h2>
     <a href="#nuevos">Ver novedades</a>
   </div>
 
@@ -9,9 +9,9 @@
       <article class="book-card">
         <a [routerLink]="['/libro', book.id]" style="text-decoration: none; color: inherit; display: block;">
           <div class="thumb" [style.backgroundImage]="'url(' + getCoverUrl(book) + ')'" aria-hidden="true"></div>
-          <p class="category">{{ book.categoria?.nombre || 'Sin categoría' }}</p>
+          <p class="category">{{ book.categoriaNombre || book.categoria?.nombre || 'Sin categoría' }}</p>
           <h3>{{ book.titulo }}</h3>
-          <p class="author">{{ book.autor?.nombre || 'Desconocido' }}</p>
+          <p class="author">{{ book.autorNombre || book.autor?.nombre || 'Desconocido' }}</p>
         </a>
       </article>
     }
