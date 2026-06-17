@@ -4,6 +4,7 @@ import { HomeHeaderComponent } from './components/home-header/home-header.compon
 import { HomeHeroComponent } from './components/home-hero/home-hero.component';
 import { HomeSidePanelComponent } from './components/home-side-panel/home-side-panel.component';
 import { HomeSidebarComponent } from './components/home-sidebar/home-sidebar.component';
+import { FooterComponent } from '../../shared/components/footer/footer.component';
 
 @Component({
   selector: 'app-home-page',
@@ -12,9 +13,10 @@ import { HomeSidebarComponent } from './components/home-sidebar/home-sidebar.com
     HomeHeaderComponent,
     HomeHeroComponent,
     HomeBookGridComponent,
-    HomeSidePanelComponent
+    HomeSidePanelComponent,
+    FooterComponent
   ],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.scss'
 })
-export class HomePageComponent {}
+export class HomePageComponent { }

@@ -1,5 +1,5 @@
 <header class="header">
-  
+
   <!-- Mensaje decorativo para llenar el espacio vacío en la página Explorar -->
   <div class="header-greeting" *ngIf="isExplorarPage">
     <span class="greeting-icon">✨</span>
@@ -9,13 +9,8 @@
   <!-- Buscador Integrado (Oculto en Explorar para evitar redundancia) -->
   <div class="search-container" *ngIf="!isExplorarPage">
     <span class="search-icon">🔍</span>
-    <input
-      type="text"
-      class="search-input"
-      placeholder="Buscar título, autor o categoría..."
-      [(ngModel)]="textoBusqueda"
-      (keydown)="onBusquedaEnter($event)"
-    >
+    <input type="text" class="search-input" placeholder="Buscar título, autor o categoría..."
+      [(ngModel)]="textoBusqueda" (keydown)="onBusquedaEnter($event)">
     <button class="btn-search" (click)="buscarRapido()">Buscar</button>
   </div>
 

@@ -17,7 +17,7 @@ export class HomeHeaderComponent implements OnInit, OnDestroy {
   protected isLoggedIn = false;
   protected isMenuOpen = false;
   protected textoBusqueda = '';
-  
+
   private readonly elementRef = inject(ElementRef);
   private readonly router = inject(Router);
   private readonly authState = inject(AuthStateService);

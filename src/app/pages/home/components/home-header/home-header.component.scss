@@ -1,13 +1,24 @@
 .header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 1.5rem;
-  padding: 0.8rem 1.2rem;
-  border-radius: 18px;
-  background: var(--surface-card);
-  border: 1px solid rgba(56, 74, 97, 0.12);
-  box-shadow: 0 16px 30px rgba(31, 48, 72, 0.1);
+  padding: 1rem 1.5rem;
+  border-radius: 0 0 24px 24px;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 10px 30px rgba(31, 48, 72, 0.05);
+  margin-top: -1.5rem;
+  /* Ajuste para que se pegue arriba del todo considerando el padding del main-area */
+  margin-left: -2.5rem;
+  margin-right: -2.5rem;
+  margin-bottom: 2rem;
+  width: calc(100% + 5rem);
 }
 
 /* --- Mensaje Decorativo --- */
@@ -16,11 +27,11 @@
   align-items: center;
   gap: 0.5rem;
   padding-left: 0.5rem;
-  
+
   .greeting-icon {
     font-size: 1.1rem;
   }
-  
+
   .greeting-text {
     font-size: 0.95rem;
     font-weight: 700;
@@ -35,16 +46,17 @@
   align-items: center;
   flex: 1;
   max-width: 600px;
-  background: #f8fbfe;
+  background: rgba(255, 255, 255, 0.9);
   border: 1px solid #bfd0df;
-  border-radius: 12px;
-  padding: 0.4rem 0.6rem;
+  border-radius: 50px;
+  padding: 0.4rem 0.6rem 0.4rem 1.2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
   transition: all 0.2s ease;
   position: relative;
 
   &:focus-within {
     border-color: #6f9fbf;
-    box-shadow: 0 0 0 3px rgba(116, 159, 191, 0.2);
+    box-shadow: 0 0 0 4px rgba(116, 159, 191, 0.15);
     background: #fff;
   }
 }
@@ -73,8 +85,8 @@
 
 .btn-search {
   border: none;
-  border-radius: 8px;
-  padding: 0.5rem 1rem;
+  border-radius: 40px;
+  padding: 0.6rem 1.2rem;
   font: inherit;
   font-weight: 700;
   font-size: 0.85rem;
@@ -88,7 +100,7 @@
     opacity: 0.9;
     transform: translateY(-1px);
   }
-  
+
   &:active {
     transform: translateY(0);
   }
@@ -262,15 +274,16 @@
     order: 2;
     margin-left: auto;
   }
-  
+
   .profile-trigger {
     padding: 0.35rem;
   }
 
   .profile-info {
-    display: none; /* Ocultar texto del perfil en móvil */
+    display: none;
+    /* Ocultar texto del perfil en móvil */
   }
-  
+
   .menu-dropdown {
     width: 200px;
   }
