@@ -1,0 +1,42 @@
+/* Contenedor raíz de todas las páginas públicas */
+.main-layout {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-main);
+}
+
+/* Zona debajo del header: sidebar + contenido */
+.layout-body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+}
+
+/* Zona de contenido principal (a la derecha del sidebar) */
+.main-area {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 2.5rem 4rem;
+  gap: 2rem;
+}
+
+/* --- Media Queries --- */
+@media (max-width: 1080px) {
+  /* En móvil el sidebar desaparece del grid (pasa a barra inferior) */
+  .layout-body {
+    grid-template-columns: 1fr;
+  }
+
+  .main-area {
+    padding: 1.5rem 1.2rem 6rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .main-area {
+    padding: 1rem 1rem 6rem;
+  }
+}

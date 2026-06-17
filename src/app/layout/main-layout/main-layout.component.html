@@ -1,0 +1,17 @@
+<main class="main-layout">
+  <!-- Cabecera superior fija (buscador + sesión) -->
+  <app-home-header class="layout-header"></app-home-header>
+
+  <div class="layout-body">
+    <!-- Barra lateral de navegación -->
+    <app-home-sidebar></app-home-sidebar>
+
+    <!-- Contenido de la página activa -->
+    <section class="main-area">
+      <router-outlet></router-outlet>
+    </section>
+  </div>
+
+  <!-- Pie de página -->
+  <app-footer></app-footer>
+</main>

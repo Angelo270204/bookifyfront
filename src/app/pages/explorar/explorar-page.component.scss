@@ -1,22 +1,5 @@
-/* ======================================
-   LAYOUT PRINCIPAL
-   ====================================== */
-.explorar-layout {
-  max-width: 1400px;
-  margin: 0 auto;
-  min-height: 100vh;
-  padding: 1rem 1.35rem 5rem;
-  display: grid;
-  grid-template-columns: 260px minmax(0, 1fr);
-  gap: 1rem;
-}
-
-.main-area {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
-}
+/* El layout principal lo maneja MainLayoutComponent */
+/* Aquí solo van los estilos del contenido de Explorar */
 
 /* ======================================
    TARJETA DE FILTROS (REDISEÑADA)
@@ -434,7 +417,6 @@
   .libro-grid { grid-template-columns: repeat(3, 1fr); }
 }
 @media (max-width: 1080px) {
-  .explorar-layout { grid-template-columns: 1fr; padding: 1rem 1rem 5.5rem; }
   .filtros-controles { flex-wrap: wrap; gap: 1rem; }
   .filtro-select { min-width: 150px; }
   .chips-grupo { flex-direction: column; gap: 0.5rem; }

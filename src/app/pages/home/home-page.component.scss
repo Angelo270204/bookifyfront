@@ -1,49 +1,20 @@
-.home-layout {
-  width: 100%;
-  min-height: 100vh;
-  display: grid;
-  /* El sidebar ocupa 280px fijo, el resto es para el contenido */
-  grid-template-columns: 280px minmax(0, 1fr);
-  /* Sin padding ni gap a nivel general, los manejamos dentro de cada área */
-  background: var(--bg-main);
-}
-
-.main-area {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  /* Padding general para el contenido de la derecha */
-  padding: 1.5rem 2.5rem 5rem 2.5rem;
-}
+/* El layout principal (padding, header, footer) está en MainLayoutComponent */
+/* Aquí solo definimos la grilla interna de contenido de la Home */
 
 .content-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(280px, 320px);
-  gap: 1.2rem;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 300px);
+  gap: 2rem;
 }
 
-/* --- Media Queries --- */
 @media (max-width: 1080px) {
-  .home-layout {
-    /* En móvil se oculta el sidebar lateral (que pasará a ser barra inferior) */
-    grid-template-columns: 1fr;
-  }
-
-  .main-area {
-    padding: 1rem 1.2rem 6rem 1.2rem;
-    /* Espacio para bottom nav */
-  }
-
   .content-grid {
-    /* En tablets dividimos 60/40 aprox */
-    grid-template-columns: 1fr 300px;
+    grid-template-columns: 1fr 270px;
   }
 }
 
 @media (max-width: 760px) {
   .content-grid {
-    /* En celulares apilamos todo a 1 sola columna */
     grid-template-columns: 1fr;
   }
 }

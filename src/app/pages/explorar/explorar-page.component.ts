@@ -6,8 +6,6 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Subject, forkJoin, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { LibroService } from '../../services/libro';
-import { HomeSidebarComponent } from '../home/components/home-sidebar/home-sidebar.component';
-import { HomeHeaderComponent } from '../home/components/home-header/home-header.component';
 
 // Paleta de colores para los placeholders de portada
 const PALETA = [
@@ -22,7 +20,7 @@ const PALETA = [
 @Component({
   selector: 'app-explorar-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, HomeSidebarComponent, HomeHeaderComponent],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './explorar-page.component.html',
   styleUrl: './explorar-page.component.scss',
 })
@@ -58,8 +56,10 @@ export class ExplorarPageComponent implements OnInit, OnDestroy {
   // Chips de formato rápido
   formatos = [
     { valor: '', etiqueta: 'Todos' },
-    { valor: 'FISICO', etiqueta: 'Físico' },
-    { valor: 'DIGITAL', etiqueta: 'Digital' },
+    { valor: 'PDF', etiqueta: 'PDF' },
+    { valor: 'EPUB', etiqueta: 'EPUB' },
+    { valor: 'MOBI', etiqueta: 'MOBI' },
+    { valor: 'AZW3', etiqueta: 'AZW3' },
   ];
 
   // Opciones de ordenamiento

@@ -1,6 +1,8 @@
 .sidebar {
   position: sticky;
+  /* El top coincide con la altura del header para que quede justo debajo */
   top: 0;
+  /* El sidebar ocupa el alto de la pantalla visible */
   height: 100vh;
   padding: 2rem 1.2rem;
   display: flex;
@@ -8,7 +10,8 @@
   background: linear-gradient(160deg, #112840, #0a1625);
   border-right: 1px solid rgba(255, 255, 255, 0.05);
   box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
-  z-index: 50;
+  z-index: 30; /* Por debajo del header (z-index: 40) */
+  overflow-y: auto; /* Por si el menú crece */
 }
 
 .brand {

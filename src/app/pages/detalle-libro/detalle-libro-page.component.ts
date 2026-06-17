@@ -3,12 +3,11 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { LibroService } from '../../services/libro';
 import { Libro } from '../../models/libro.interface';
-import { HomeHeaderComponent } from '../home/components/home-header/home-header.component';
 
 @Component({
   selector: 'app-detalle-libro-page',
   standalone: true,
-  imports: [CommonModule, RouterLink, HomeHeaderComponent],
+  imports: [CommonModule, RouterLink],
   templateUrl: './detalle-libro-page.component.html',
   styleUrl: './detalle-libro-page.component.scss'
 })

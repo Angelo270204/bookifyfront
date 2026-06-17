@@ -5,19 +5,27 @@ import { RegisterPageComponent } from './pages/register/register-page.component'
 import { adminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'home' },
   { path: 'login', component: LoginPageComponent, title: 'Iniciar Sesión — Bookify' },
   { path: 'register', component: RegisterPageComponent, title: 'Registrarse — Bookify' },
-  { path: 'home', component: HomePageComponent, title: 'Inicio — Bookify' },
+
+  // Layout Principal Público (Stripe Press style)
   {
-    path: 'explorar',
-    title: 'Explorar Catálogo — Bookify',
-    loadComponent: () => import('./pages/explorar/explorar-page.component').then(m => m.ExplorarPageComponent)
-  },
-  {
-    path: 'libro/:id',
-    title: 'Detalles del Libro — Bookify',
-    loadComponent: () => import('./pages/detalle-libro/detalle-libro-page.component').then(m => m.DetalleLibroPageComponent)
+    path: '',
+    loadComponent: () => import('./layout/main-layout/main-layout.component').then(m => m.MainLayoutComponent),
+    children: [
+      { path: '', pathMatch: 'full', redirectTo: 'home' },
+      { path: 'home', component: HomePageComponent, title: 'Inicio — Bookify' },
+      {
+        path: 'explorar',
+        title: 'Explorar Catálogo — Bookify',
+        loadComponent: () => import('./pages/explorar/explorar-page.component').then(m => m.ExplorarPageComponent)
+      },
+      {
+        path: 'libro/:id',
+        title: 'Detalles del Libro — Bookify',
+        loadComponent: () => import('./pages/detalle-libro/detalle-libro-page.component').then(m => m.DetalleLibroPageComponent)
+      }
+    ]
   },
 
   // Panel de administración con layout anidado
