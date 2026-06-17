@@ -26,6 +26,11 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/detalle-libro/detalle-libro-page.component').then(m => m.DetalleLibroPageComponent)
       },
       {
+        path: 'pago/:preferenceId',
+        title: 'Pago Seguro — Bookify',
+        loadComponent: () => import('./pages/simulador-pago/simulador-pago.component').then(m => m.SimuladorPagoComponent)
+      },
+      {
         path: 'pago-exitoso',
         title: 'Pago Exitoso — Bookify',
         loadComponent: () => import('./pages/pago/pago-exitoso/pago-exitoso.component').then(m => m.PagoExitosoComponent)
