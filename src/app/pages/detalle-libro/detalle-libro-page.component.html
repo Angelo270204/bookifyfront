@@ -43,21 +43,30 @@
           </span>
         </div>
 
-        <div class="precio-section">
+        <div class="precio-section" *ngIf="!yaComprado">
           <span class="precio">${{ libro.precio | number:'1.2-2' }}</span>
         </div>
 
-        <div class="acciones">
-          <button class="btn-comprar" 
-                  [disabled]="libro.activo === false || procesandoCompra"
-                  (click)="comprarLibro()">
-            {{ procesandoCompra ? 'Procesando...' : 'Comprar ahora' }}
-          </button>
-          <button class="btn-carrito" [disabled]="libro.activo === false">Agregar al carrito</button>
+        <!-- Alerta de Error de Compra -->
+        <div class="alert alert-error" *ngIf="mensajeErrorCompra" style="margin-bottom: 1rem; border-radius: 8px; padding: 1rem; background-color: #fef2f2; color: #dc2626; border: 1px solid #fecaca; text-align: center;">
+          {{ mensajeErrorCompra }}
         </div>
-        
 
-
+        <div class="acciones">
+          <ng-container *ngIf="yaComprado; else noComprado">
+            <a routerLink="/mi-biblioteca" class="btn-enlace btn-success">
+              Ya está en tu Biblioteca
+            </a>
+          </ng-container>
+          <ng-template #noComprado>
+            <button class="btn-comprar" 
+                    [disabled]="libro.activo === false || procesandoCompra"
+                    (click)="comprarLibro()">
+              {{ procesandoCompra ? 'Procesando...' : 'Comprar ahora' }}
+            </button>
+            <button class="btn-carrito" [disabled]="libro.activo === false">Agregar al carrito</button>
+          </ng-template>
+        </div>
         <div class="descripcion-section">
           <h3>Descripción</h3>
           <p class="descripcion-texto">{{ libro.descripcion || 'No hay descripción disponible para este libro.' }}</p>

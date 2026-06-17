@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { LibroService } from '../../services/libro';
 import { CompraService } from '../../services/compra.service';
+import { AuthStateService } from '../../services/auth-state.service';
 import { Libro } from '../../models/libro.interface';
 
 @Component({
@@ -17,11 +18,17 @@ export class DetalleLibroPageComponent implements OnInit {
   private router = inject(Router);
   private libroService = inject(LibroService);
   private compraService = inject(CompraService);
+  private authState = inject(AuthStateService);
   private cdr = inject(ChangeDetectorRef);
 
   libro: Libro | null = null;
   cargando = true;
   error: string | null = null;
+  mensajeErrorCompra: string | null = null;
+  
+  // Para la validación de propiedad
+  yaComprado = false;
+  verificandoAcceso = false;
 
   librosSimilares: any[] = [];
   cargandoSimilares = true;
@@ -60,6 +67,7 @@ export class DetalleLibroPageComponent implements OnInit {
         this.libro = data;
         this.cargando = false;
         this.cdr.detectChanges();
+        this.verificarSiYaLoCompro(id);
       },
       error: (err) => {
         console.error('Error al cargar libro:', err);
@@ -85,10 +93,33 @@ export class DetalleLibroPageComponent implements OnInit {
     });
   }
 
+  verificarSiYaLoCompro(libroId: number): void {
+    // Solo verificar si hay alguien logeado
+    if (!localStorage.getItem('bookifyUserEmail')) return;
+
+    this.verificandoAcceso = true;
+    this.compraService.verificarAcceso(libroId).subscribe({
+      next: (res) => {
+        if (res.acceso) {
+          this.yaComprado = true;
+        }
+        this.verificandoAcceso = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        // 403 Forbidden significa que no lo ha comprado, lo cual es normal.
+        this.yaComprado = false;
+        this.verificandoAcceso = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
   comprarLibro(): void {
     if (!this.libro || !this.libro.id || this.libro.activo === false) return;
     this.procesandoCompra = true;
 
+    this.mensajeErrorCompra = null;
     this.compraService.iniciarCompra(this.libro.id).subscribe({
       next: (res) => {
         if (res.preferenceId) {
@@ -99,8 +130,19 @@ export class DetalleLibroPageComponent implements OnInit {
       error: (err) => {
         console.error('Error al iniciar compra:', err);
         this.procesandoCompra = false;
+        this.cdr.detectChanges();
+        
         if (err.status === 401 || err.status === 403) {
           this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url } });
+        } else if (err.status === 500) {
+          // El backend rechaza la recompra lanzando IllegalStateException
+          this.mensajeErrorCompra = 'Ya tienes este libro en tu biblioteca.';
+          this.yaComprado = true; // Por si acaso actualizar la vista
+          
+          setTimeout(() => {
+            this.mensajeErrorCompra = null;
+            this.cdr.detectChanges();
+          }, 4000);
         }
       }
     });

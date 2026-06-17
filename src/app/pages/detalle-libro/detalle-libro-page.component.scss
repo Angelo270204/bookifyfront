@@ -215,7 +215,7 @@
       flex-direction: row;
     }
 
-    button {
+    button, .btn-enlace {
       flex: 1;
       padding: 16px 24px;
       border-radius: 12px;
@@ -224,6 +224,9 @@
       cursor: pointer;
       border: none;
       transition: all 0.2s ease;
+      text-decoration: none;
+      text-align: center;
+      display: inline-block;
 
       &:disabled {
         opacity: 0.6;
@@ -238,6 +241,17 @@
 
       &:hover:not(:disabled) {
         background: var(--text-title);
+        transform: translateY(-2px);
+      }
+    }
+
+    .btn-success {
+      background: #10b981;
+      color: white;
+      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+
+      &:hover {
+        background: #059669;
         transform: translateY(-2px);
       }
     }
