@@ -4,6 +4,12 @@
     <span class="badge-count">Total: {{ totalElements }} libros</span>
   </div>
 
+  <div class="list-filters">
+    <button class="filter-tab" [class.active]="filtroEstado === true" (click)="setFiltro(true)">Activos</button>
+    <button class="filter-tab" [class.active]="filtroEstado === false" (click)="setFiltro(false)">Ocultos</button>
+    <button class="filter-tab" [class.active]="filtroEstado === null" (click)="setFiltro(null)">Todos</button>
+  </div>
+
   <!-- Input de archivo oculto para actualizar portada -->
   <input
     #inputPortadaTabla
@@ -24,10 +30,11 @@
           <th>Precio</th>
           <th>Autor</th>
           <th>Categoría</th>
+          <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let libro of libros">
+        <tr *ngFor="let libro of libros" [class.libro-inactivo]="libro.activo === false">
 
           <!-- Miniatura de portada con botón de cambio en hover -->
           <td class="col-portada">
@@ -69,7 +76,16 @@
           <td><span class="badge badge-formato">{{ libro.formato }}</span></td>
           <td class="precio-col">${{ libro.precio | number:'1.2-2' }}</td>
           <td>{{ libro.autorNombre }}</td>
-          <td><span class="badge badge-categoria">{{ libro.categoriaNombre }}</span></td>
+          <td>
+            <span class="badge badge-categoria">{{ libro.categoriaNombre }}</span>
+            <span class="badge badge-inactivo" *ngIf="libro.activo === false" style="background: #fee2e2; color: #991b1b; margin-left: 5px;">Oculto</span>
+          </td>
+          <td class="acciones-col">
+            <button class="btn-icon btn-edit" (click)="onEditar(libro)" title="Editar">✏️</button>
+            <button class="btn-icon btn-toggle" (click)="toggleEstado(libro)" [title]="libro.activo === false ? 'Activar' : 'Ocultar'">
+              {{ libro.activo === false ? '👁️‍🗨️' : '🚫' }}
+            </button>
+          </td>
         </tr>
         <tr *ngIf="libros.length === 0">
           <td colspan="7" class="empty-state">

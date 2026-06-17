@@ -1,4 +1,4 @@
-import { Component, inject, Output, EventEmitter, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, Output, EventEmitter, OnInit, ViewChild, ElementRef, ChangeDetectorRef, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LibroService } from '../../services/libro';
@@ -14,7 +14,30 @@ export class LibroForm implements OnInit {
   private libroService = inject(LibroService);
   private cdr = inject(ChangeDetectorRef); // Necesario para forzar redibujado tras la subida async
   @Output() libroGuardado = new EventEmitter<void>();
+  @Output() cancelar = new EventEmitter<void>();
   @ViewChild('inputPortada') inputPortada!: ElementRef<HTMLInputElement>;
+
+  // Detectar cuándo se pasa un libro a editar
+  @Input() set libroAEditar(libro: any) {
+    if (libro) {
+      this.esEdicion = true;
+      this.previewPortadaUrl = libro.portadaUrl || null;
+      this.nuevoLibro = {
+        id: libro.id,
+        titulo: libro.titulo,
+        descripcion: libro.descripcion,
+        precio: libro.precio,
+        formato: libro.formato,
+        portadaUrl: libro.portadaUrl,
+        autorId: libro.autor?.id || libro.autorId,
+        categoriaId: libro.categoria?.id || libro.categoriaId
+      };
+    } else {
+      this.resetFormulario();
+    }
+  }
+
+  esEdicion = false;
 
   // Arreglos vacíos para almacenar lo que devuelva el backend
   autores: any[] = [];
@@ -105,46 +128,54 @@ export class LibroForm implements OnInit {
   }
 
   guardar() {
-    this.libroService.createLibro(this.nuevoLibro).subscribe({
-      next: (response) => {
-        // Notificamos a la tabla para que recargue
-        this.libroGuardado.emit();
-
-        // Limpiamos todo el formulario
-        this.nuevoLibro = {
-          titulo: '', descripcion: '', precio: 0, formato: '',
-          portadaUrl: '', autorId: null, categoriaId: null
-        };
-        this.previewPortadaUrl = null;
-        this.errorPortada = null;
-        if (this.inputPortada) this.inputPortada.nativeElement.value = '';
-
-        console.log('Libro guardado con éxito:', response);
-      },
-      error: (err) => {
-        console.error('Error al guardar libro:', err);
-        // Si el libro falla en guardarse y ya habíamos subido una portada, la borramos
-        if (this.nuevoLibro.portadaUrl) {
-          this.libroService.deleteImagen(this.nuevoLibro.portadaUrl).subscribe({
-            next: () => console.log('Imagen huérfana eliminada por fallo al guardar el libro'),
-            error: (e) => console.warn('No se pudo borrar imagen huérfana en Cloudinary:', e)
-          });
+    if (this.esEdicion) {
+      // Flujo de Actualización
+      this.libroService.updateLibro(this.nuevoLibro.id, this.nuevoLibro).subscribe({
+        next: (response) => {
+          this.libroGuardado.emit();
+          this.resetFormulario();
+          console.log('Libro editado con éxito:', response);
+        },
+        error: (err) => console.error('Error al editar libro:', err)
+      });
+    } else {
+      // Flujo de Creación
+      this.libroService.createLibro(this.nuevoLibro).subscribe({
+        next: (response) => {
+          this.libroGuardado.emit();
+          this.resetFormulario();
+          console.log('Libro guardado con éxito:', response);
+        },
+        error: (err) => {
+          console.error('Error al guardar libro:', err);
+          if (this.nuevoLibro.portadaUrl) {
+            this.libroService.deleteImagen(this.nuevoLibro.portadaUrl).subscribe({
+              next: () => console.log('Imagen huérfana eliminada'),
+              error: (e) => console.warn('Error al borrar imagen huérfana:', e)
+            });
+          }
         }
-      }
-    });
+      });
+    }
   }
 
   // Se ejecuta al dar clic en el botón Cancelar
-  cancelar() {
-    // Si hay una imagen subida, mandamos a eliminarla a Cloudinary
-    if (this.nuevoLibro.portadaUrl) {
+  onCancelar() {
+    // Si hay una imagen recién subida y no estábamos editando (o si es una nueva imagen), la borramos
+    // (Por simplicidad en la demo, si cancela durante edición, no eliminamos la foto, ya que podría ser la original).
+    if (!this.esEdicion && this.nuevoLibro.portadaUrl) {
       this.libroService.deleteImagen(this.nuevoLibro.portadaUrl).subscribe({
         next: () => console.log('Imagen cancelada eliminada de Cloudinary'),
         error: (e) => console.warn('Error al intentar borrar imagen cancelada:', e)
       });
     }
 
-    // Limpiamos el formulario
+    this.resetFormulario();
+    this.cancelar.emit();
+  }
+
+  private resetFormulario() {
+    this.esEdicion = false;
     this.nuevoLibro = {
       titulo: '', descripcion: '', precio: 0, formato: '',
       portadaUrl: '', autorId: null, categoriaId: null
@@ -152,7 +183,6 @@ export class LibroForm implements OnInit {
     this.previewPortadaUrl = null;
     this.errorPortada = null;
     if (this.inputPortada) this.inputPortada.nativeElement.value = '';
-    
     this.cdr.detectChanges();
   }
 }

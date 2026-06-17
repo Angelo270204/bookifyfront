@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LibroService } from '../../services/libro';
 
@@ -23,6 +23,11 @@ export class LibroList implements OnInit {
   currentPage = 0;
   totalPages = 0;
   totalElements = 0;
+  
+  // null = Todos, true = Activos, false = Ocultos
+  filtroEstado: boolean | null = true; 
+
+  @Output() editarLibro = new EventEmitter<any>();
 
   // ID del libro cuya portada se está actualizando (para el spinner por fila)
   libroSubiendo: number | null = null;
@@ -39,11 +44,15 @@ export class LibroList implements OnInit {
   }
 
   cargarLibros(page: number = 0) {
-    this.libroService.getLibrosPaginados(page, 10).subscribe({
+    this.libroService.getLibrosPaginados(page, 10, this.filtroEstado).subscribe({
       next: (response) => {
         // Validación segura por si la respuesta no viene paginada como esperamos
         if (response && response.content) {
-          this.libros = response.content;
+          this.libros = response.content.map((libro: any) => ({
+            ...libro,
+            // Mapeamos el campo 'estado' que ahora nos envía el backend hacia nuestra variable 'activo'
+            activo: libro.estado 
+          }));
           this.currentPage = response.pageable?.pageNumber || 0;
           this.totalPages = response.totalPages || 0;
           this.totalElements = response.totalElements || 0;
@@ -120,5 +129,36 @@ export class LibroList implements OnInit {
   // Devuelve un degradado según el ID del libro (consistente por libro)
   obtenerColorPortada(libroId: number): string {
     return PALETA_PORTADAS[libroId % PALETA_PORTADAS.length];
+  }
+
+  // Emite el evento para editar el libro
+  onEditar(libro: any): void {
+    this.editarLibro.emit(libro);
+  }
+
+  // Cambia el estado Activo/Inactivo del libro
+  toggleEstado(libro: any): void {
+    const accion = libro.activo === false ? 'restaurar' : 'ocultar';
+    if (confirm(`¿Estás seguro de que deseas ${accion} el libro "${libro.titulo}"?`)) {
+      const nuevoEstado = libro.activo === false ? true : false;
+      this.libroService.updateEstado(libro.id, nuevoEstado).subscribe({
+        next: () => {
+          libro.activo = nuevoEstado;
+          // Si estamos viendo "Activos" y lo ocultamos, lo quitamos de la vista. Y viceversa.
+          if (this.filtroEstado !== null && this.filtroEstado !== nuevoEstado) {
+            this.cargarLibros(this.currentPage);
+          } else {
+            this.cdr.detectChanges();
+          }
+        },
+        error: (err) => console.error('Error al actualizar estado:', err)
+      });
+    }
+  }
+
+  // Filtrado de Tabs
+  setFiltro(estado: boolean | null) {
+    this.filtroEstado = estado;
+    this.cargarLibros(0);
   }
 }

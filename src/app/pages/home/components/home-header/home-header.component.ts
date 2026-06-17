@@ -1,7 +1,8 @@
 import { Component, ElementRef, HostListener, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink, Router } from '@angular/router';
+import { RouterLink, Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { AuthStateService } from '../../../../services/auth-state.service';
 import { Subscription } from 'rxjs';
 
@@ -26,7 +27,13 @@ export class HomeHeaderComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subs.push(
       this.authState.isLoggedIn$.subscribe(isLoggedIn => this.isLoggedIn = isLoggedIn),
-      this.authState.email$.subscribe(email => this.userEmail = email)
+      this.authState.email$.subscribe(email => this.userEmail = email),
+      // Limpiamos el buscador al cambiar de página
+      this.router.events.pipe(
+        filter(event => event instanceof NavigationEnd)
+      ).subscribe(() => {
+        this.textoBusqueda = '';
+      })
     );
   }
 

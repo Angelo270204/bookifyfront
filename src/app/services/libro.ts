@@ -14,8 +14,12 @@ export class LibroService {
   private autoresUrl = `${environment.apiUrl}/autores`;
   private categoriasUrl = `${environment.apiUrl}/categorias`;
 
-  getLibrosPaginados(page: number = 0, size: number = 10): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/buscar?page=${page}&size=${size}`);
+  getLibrosPaginados(page: number = 0, size: number = 10, estado: boolean | null = null): Observable<any> {
+    let url = `${this.apiUrl}/buscar?page=${page}&size=${size}`;
+    if (estado !== null) {
+      url += `&estado=${estado}`;
+    }
+    return this.http.get<any>(url);
   }
 
   // Búsqueda avanzada con filtros dinámicos (para la página Explorar)
@@ -38,14 +42,15 @@ export class LibroService {
     if (filtros.precioMax !== undefined) params.set('precioMax', String(filtros.precioMax));
     if (filtros.formato) params.set('formato', filtros.formato);
     if (filtros.sort) params.set('sort', filtros.sort);
+    params.set('estado', 'true'); // Filtro público: Solo libros activos
     params.set('page', String(filtros.page ?? 0));
     params.set('size', String(filtros.size ?? 12));
     return this.http.get<any>(`${this.apiUrl}/buscar?${params.toString()}`);
   }
 
-  // Obtiene los últimos libros agregados, ordenados por fecha de registro descendente
+  // Obtiene los últimos libros agregados, ordenados por fecha de registro descendente y solo activos
   getNuevosLanzamientos(size: number = 10): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/buscar?sort=fechaRegistro,desc&size=${size}`);
+    return this.http.get<any>(`${this.apiUrl}/buscar?sort=fechaRegistro,desc&size=${size}&estado=true`);
   }
 
   // Obtiene los libros más vendidos / populares según historial de compras
@@ -98,6 +103,11 @@ export class LibroService {
   // Actualiza solo la portada de un libro existente (llama al endpoint PATCH)
   updatePortada(id: number, portadaUrl: string): Observable<any> {
     return this.http.patch<any>(`${this.apiUrl}/${id}/portada`, { portadaUrl });
+  }
+
+  // Activa o Desactiva un libro (Baja lógica)
+  updateEstado(id: number, activo: boolean): Observable<any> {
+    return this.http.patch<any>(`${this.apiUrl}/${id}/estado`, { activo });
   }
 
   // Elimina una imagen huérfana o cancelada de Cloudinary

@@ -1,7 +1,8 @@
 <div class="form-card">
-  <h3 class="form-title">Añadir Nuevo Libro</h3>
+  <h2 class="form-title">{{ esEdicion ? 'Editar Libro' : 'Añadir Nuevo Libro' }}</h2>
+  <p class="form-subtitle">{{ esEdicion ? 'Modifica los detalles del libro.' : 'Ingresa los detalles del nuevo libro.' }}</p>
 
-  <form class="book-form" (ngSubmit)="guardar()">
+  <form class="book-form" #libroForm="ngForm" (ngSubmit)="guardar()">
     <div class="form-grid">
       <div class="field">
         <label for="titulo">Título</label>
@@ -85,14 +86,9 @@
     </div>
 
     <div class="form-actions">
-      <!-- Botón de cancelar -->
-      <button type="button" class="btn-cancel" (click)="cancelar()" [disabled]="subiendoPortada">
-        ❌ Cancelar
-      </button>
-
-      <button type="submit" class="btn-save" [disabled]="subiendoPortada">
-        <span *ngIf="!subiendoPortada">💾 Guardar Libro</span>
-        <span *ngIf="subiendoPortada">⏳ Subiendo portada...</span>
+      <button type="button" class="btn-cancel" (click)="onCancelar()">Cancelar</button>
+      <button type="submit" class="btn-save" [disabled]="!libroForm.form.valid || subiendoPortada">
+        {{ esEdicion ? 'Guardar Cambios' : 'Guardar Libro' }}
       </button>
     </div>
   </form>

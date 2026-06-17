@@ -16,12 +16,16 @@
 
   <!-- Panel deslizable del formulario -->
   <div class="form-panel" [class.open]="mostrarFormulario">
-    <app-libro-form (libroGuardado)="onLibroGuardado()"></app-libro-form>
+    <app-libro-form 
+      [libroAEditar]="libroSeleccionado" 
+      (libroGuardado)="onLibroGuardado()"
+      (cancelar)="toggleFormulario()">
+    </app-libro-form>
   </div>
 
   <!-- Tabla de libros -->
   <section class="table-section">
-    <app-libro-list></app-libro-list>
+    <app-libro-list (editarLibro)="editarLibro($event)"></app-libro-list>
   </section>
 
 </div>
