@@ -1,0 +1,81 @@
+<div class="historial-layout">
+  <div class="historial-container">
+    <div class="header-section">
+      <h1>Mi Historial de Compras</h1>
+      <p class="subtitle">Revisa tus adquisiciones y sus estados.</p>
+    </div>
+
+    <!-- Filtros de búsqueda -->
+    <div class="filters-card">
+      <div class="filter-group">
+        <label for="fechaInicio">Desde:</label>
+        <input type="date" id="fechaInicio" [(ngModel)]="fechaInicioStr" class="form-input">
+      </div>
+      <div class="filter-group">
+        <label for="fechaFin">Hasta:</label>
+        <input type="date" id="fechaFin" [(ngModel)]="fechaFinStr" class="form-input">
+      </div>
+      <div class="filter-actions">
+        <button class="btn-search" (click)="buscar()">Buscar</button>
+        <button class="btn-clear" (click)="limpiarFiltros()" *ngIf="fechaInicioStr || fechaFinStr">Limpiar</button>
+      </div>
+    </div>
+
+    <!-- Error de validación de fechas -->
+    <div class="filter-error" *ngIf="mensajeFiltroError" style="background: #fee2e2; color: #991b1b; padding: 12px 20px; border-radius: 8px; margin-bottom: 20px; font-weight: 500; text-align: center;">
+      ⚠️ {{ mensajeFiltroError }}
+    </div>
+
+    <!-- Estado de carga -->
+    <div *ngIf="cargando" class="loading-state">
+      <div class="spinner"></div>
+      <p>Cargando tu historial...</p>
+    </div>
+
+    <!-- Estado de error -->
+    <div *ngIf="error" class="error-state">
+      <span class="icon">⚠️</span>
+      <p>{{ error }}</p>
+    </div>
+
+    <!-- Listado de Tarjetas -->
+    <div class="historial-list" *ngIf="!cargando && !error">
+      
+      <!-- Estado vacío -->
+      <div *ngIf="compras.length === 0" class="empty-state">
+        <span class="icon">🛒</span>
+        <h3>No se encontraron compras</h3>
+        <p>Ajusta los filtros de fecha o explora nuestro catálogo para empezar a comprar.</p>
+        <a routerLink="/explorar" class="btn-primary">Explorar Libros</a>
+      </div>
+
+      <!-- Tarjetas -->
+      <div class="compra-card" *ngFor="let compra of compras; let i = index">
+        
+        <div class="portada-wrapper">
+          <img *ngIf="compra.portadaUrl" [src]="compra.portadaUrl" [alt]="compra.titulo" class="portada-img">
+          <div *ngIf="!compra.portadaUrl" class="portada-placeholder" [style.background]="colorPortada(i)">
+            <span>{{ compra.titulo.charAt(0).toUpperCase() }}</span>
+          </div>
+        </div>
+
+        <div class="compra-info">
+          <h3 class="titulo">{{ compra.titulo }}</h3>
+          <p class="autor">Por {{ compra.autorNombre }}</p>
+          <div class="fecha-monto">
+            <span class="fecha">📅 {{ compra.fechaCompra | date:'mediumDate' }}</span>
+            <span class="monto">💳 ${{ compra.monto | number:'1.2-2' }}</span>
+          </div>
+        </div>
+
+        <div class="compra-status">
+          <span class="badge" [ngClass]="obtenerColorEstado(compra.estado)">
+            {{ compra.estado }}
+          </span>
+          <a *ngIf="compra.estado === 'COMPLETADA'" [routerLink]="['/libro', compra.libroId]" class="btn-ver-libro">Ver libro</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

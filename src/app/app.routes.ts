@@ -26,6 +26,11 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/biblioteca/biblioteca-page.component').then(m => m.BibliotecaPageComponent)
       },
       {
+        path: 'historial',
+        title: 'Mi Historial — Bookify',
+        loadComponent: () => import('./pages/historial-compras/historial-compras-page.component').then(m => m.HistorialComprasPageComponent)
+      },
+      {
         path: 'libro/:id',
         title: 'Detalles del Libro — Bookify',
         loadComponent: () => import('./pages/detalle-libro/detalle-libro-page.component').then(m => m.DetalleLibroPageComponent)
