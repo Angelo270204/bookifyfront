@@ -41,4 +41,8 @@ export class AuthService {
   login(payload: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/auth/login`, payload);
   }
+
+  logout(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/logout`, {});
+  }
 }

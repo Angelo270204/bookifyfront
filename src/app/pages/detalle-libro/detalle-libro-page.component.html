@@ -48,9 +48,16 @@
         </div>
 
         <div class="acciones">
-          <button class="btn-comprar" [disabled]="libro.activo === false">Comprar ahora</button>
+          <button class="btn-comprar" 
+                  [disabled]="libro.activo === false || procesandoCompra"
+                  (click)="comprarLibro()">
+            {{ procesandoCompra ? 'Procesando...' : 'Comprar ahora' }}
+          </button>
           <button class="btn-carrito" [disabled]="libro.activo === false">Agregar al carrito</button>
         </div>
+        
+        <!-- Contenedor del Botón de Mercado Pago -->
+        <div id="wallet_container" style="margin-top: 1rem;"></div>
 
         <div class="descripcion-section">
           <h3>Descripción</h3>

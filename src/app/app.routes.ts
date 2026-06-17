@@ -24,6 +24,21 @@ export const routes: Routes = [
         path: 'libro/:id',
         title: 'Detalles del Libro — Bookify',
         loadComponent: () => import('./pages/detalle-libro/detalle-libro-page.component').then(m => m.DetalleLibroPageComponent)
+      },
+      {
+        path: 'pago-exitoso',
+        title: 'Pago Exitoso — Bookify',
+        loadComponent: () => import('./pages/pago/pago-exitoso/pago-exitoso.component').then(m => m.PagoExitosoComponent)
+      },
+      {
+        path: 'pago-pendiente',
+        title: 'Pago Pendiente — Bookify',
+        loadComponent: () => import('./pages/pago/pago-pendiente/pago-pendiente.component').then(m => m.PagoPendienteComponent)
+      },
+      {
+        path: 'pago-fallido',
+        title: 'Pago Rechazado — Bookify',
+        loadComponent: () => import('./pages/pago/pago-fallido/pago-fallido.component').then(m => m.PagoFallidoComponent)
       }
     ]
   },

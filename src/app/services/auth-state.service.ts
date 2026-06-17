@@ -1,8 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { AuthService } from '../auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthStateService {
+  private readonly authService = inject(AuthService);
   private loggedInSubject = new BehaviorSubject<boolean>(this.checkInitialLoginState());
   private emailSubject = new BehaviorSubject<string | null>(localStorage.getItem('bookifyUserEmail'));
   private rolesSubject = new BehaviorSubject<string[]>(this.getInitialRoles());
@@ -38,6 +40,12 @@ export class AuthStateService {
   }
 
   logout(): void {
+    // Llamar al backend para invalidar la sesión HTTP (eliminar JSESSIONID válida)
+    this.authService.logout().subscribe({
+      next: () => console.log('Sesión invalidada en el backend'),
+      error: (err) => console.error('Error cerrando sesión en backend', err)
+    });
+
     localStorage.removeItem('bookifyUserEmail');
     localStorage.removeItem('bookifyUserRoles');
     localStorage.removeItem('bookifyUserId');

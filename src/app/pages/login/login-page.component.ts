@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { LoginFormComponent } from './components/login-form/login-form.component';
 import { LoginHeroComponent } from './components/login-hero/login-hero.component';
 import { AuthStateService } from '../../services/auth-state.service';
@@ -12,11 +12,14 @@ import { AuthStateService } from '../../services/auth-state.service';
 })
 export class LoginPageComponent implements OnInit {
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly authState = inject(AuthStateService);
+  private returnUrl: string = '/home';
 
   ngOnInit(): void {
     // Al entrar al login, nos aseguramos de limpiar cualquier sesión anterior de forma global
     this.authState.logout();
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home';
   }
 
   handleLoginSuccess(roles: string[]): void {
@@ -28,7 +31,7 @@ export class LoginPageComponent implements OnInit {
     if (roles && roles.some(role => role.includes('ADMIN'))) {
       this.router.navigate(['/admin']);
     } else {
-      this.router.navigate(['/home']);
+      this.router.navigateByUrl(this.returnUrl);
     }
   }
 }

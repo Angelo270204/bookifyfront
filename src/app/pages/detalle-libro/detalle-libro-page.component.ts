@@ -1,8 +1,11 @@
 import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { LibroService } from '../../services/libro';
+import { CompraService } from '../../services/compra.service';
 import { Libro } from '../../models/libro.interface';
+import { loadMercadoPago } from '@mercadopago/sdk-js';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-detalle-libro-page',
@@ -13,7 +16,9 @@ import { Libro } from '../../models/libro.interface';
 })
 export class DetalleLibroPageComponent implements OnInit {
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private libroService = inject(LibroService);
+  private compraService = inject(CompraService);
   private cdr = inject(ChangeDetectorRef);
 
   libro: Libro | null = null;
@@ -22,6 +27,9 @@ export class DetalleLibroPageComponent implements OnInit {
 
   librosSimilares: any[] = [];
   cargandoSimilares = true;
+  
+  procesandoCompra = false;
+  mpInitialized = false;
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -78,6 +86,50 @@ export class DetalleLibroPageComponent implements OnInit {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  comprarLibro(): void {
+    if (!this.libro || !this.libro.id || this.libro.activo === false) return;
+    this.procesandoCompra = true;
+
+    this.compraService.iniciarCompra(this.libro.id).subscribe({
+      next: async (res) => {
+        if (res.preferenceId) {
+          await this.inicializarMercadoPago(res.preferenceId);
+        }
+      },
+      error: (err) => {
+        console.error('Error al iniciar compra:', err);
+        this.procesandoCompra = false;
+        if (err.status === 401 || err.status === 403) {
+          this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url } });
+        }
+      }
+    });
+  }
+
+  async inicializarMercadoPago(preferenceId: string) {
+    try {
+      if (!this.mpInitialized) {
+        await loadMercadoPago();
+        this.mpInitialized = true;
+      }
+      const mp = new (window as any).MercadoPago(environment.mercadoPagoPublicKey, { locale: 'es-PE' });
+      const bricksBuilder = mp.bricks();
+      
+      // Limpiar contenedor previo si existe
+      const container = document.getElementById('wallet_container');
+      if (container) { container.innerHTML = ''; }
+
+      await bricksBuilder.create("wallet", "wallet_container", {
+        initialization: { preferenceId: preferenceId }
+      });
+    } catch (error) {
+      console.error('Error al inicializar Mercado Pago:', error);
+    } finally {
+      this.procesandoCompra = false;
+      this.cdr.detectChanges();
+    }
   }
 
   // Paleta de degradados para las portadas virtuales sin imagen
